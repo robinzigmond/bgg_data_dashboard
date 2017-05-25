@@ -52,10 +52,11 @@ def a_inside_td_with_class_collection_thumbnail(tag):
 
 
 def export_game_objects(id_list, output_file):
-    """This function finds all games (with ids in a given range - 1-300000 should be enough to
-    cover the whole database, but will probably run for days. For now I am exporting the data
-    to a text file, to be later imported to MongoDB. Later I may try to change it to import the
-    data directly"""
+    """
+    This function finds all games with ids in the given list, and exports
+    them to a text file. I hope later to change it to directly export the data
+    to MongoDB
+    """
     with open(output_file, "w") as output:
         games = bgg.game_list(game_id_list=id_list)
         for game in games:
