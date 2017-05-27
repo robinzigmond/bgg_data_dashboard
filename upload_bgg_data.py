@@ -90,9 +90,10 @@ def update_game_database(bgg_client, id_list):
     collection.insert_many(data_dict)
 
 
-bgg = boardgamegeek.BGGClient(requests_per_minute=15)
+bgg = boardgamegeek.BGGClient(requests_per_minute=10)
 # the default requests_per_minute is 30, but in practice this seems too fast
-# to be allowed access to all data needed. Halving it to 15 appears to work,
-# while keeping run times acceptable.
+# to be allowed access to all data needed. I have tried it at 15, which
+# usually works, but not 100% of the time. So far 10 seems to always work
+# - and curiously, does not seem any slower when it does work!
 most_rated_ids = get_game_ids("numvoters", pages=10)  # get 1000 most rated games
 update_game_database(bgg, most_rated_ids)  # upload data to Mongo
