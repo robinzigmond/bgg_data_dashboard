@@ -8,6 +8,9 @@ function makeGraphs(error, game_infoJson) {
 
     var games = crossfilter(game_data);
 
+    /**
+     * Year Published Chart:
+     */
     var yearDim = games.dimension(function(d) {
         return d["yearpublished"];
     });
@@ -20,11 +23,6 @@ function makeGraphs(error, game_infoJson) {
         else if (year<2000) {
             var startYear = 10*Math.floor(year/10);
             var startYearString = String(startYear);
-            /*var endYearString = String(+startYearString.slice(2)+9);
-            if (endYearString == "9") {
-                endYearString = "09";
-            }
-            return (startYearString + "-" + endYearString);*/
             return (startYearString + "s");
         } 
         else {
@@ -46,7 +44,7 @@ function makeGraphs(error, game_infoJson) {
 
     yearChart
         .width(800)
-        .height(200)
+        .height(150)
         .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
@@ -56,6 +54,27 @@ function makeGraphs(error, game_infoJson) {
         .elasticY(true)
         .xAxisLabel("Year Published")
         .yAxis().ticks(4);
+
+    /**
+     * mechanics chart:
+     */
+    var mechanicsDim = games.dimension(function(d) {
+        return d.mechanics;
+    }, true);  // tell crossfilter that this dimension is an array
+
+    var numGamesByMechanic = mechanicsDim.group();
+
+    var mechanicsChart = dc.rowChart("#mechanics-row-chart");
+
+    mechanicsChart
+        .width(400)
+        .height(300)
+        .dimension(mechanicsDim)
+        .group(numGamesByMechanic)
+        .rowsCap(10)
+        .othersGrouper(false)
+        .elasticX(true)
+        .xAxis().ticks(4);
 
     dc.renderAll();
 }
