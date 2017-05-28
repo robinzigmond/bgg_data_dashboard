@@ -1,0 +1,3 @@
+#year-bar-chart .axis text {
+    font-size: 8px; /* make text smaller so the column labels don't overlap */
+}

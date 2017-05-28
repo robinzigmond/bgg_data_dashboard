@@ -3,12 +3,13 @@
     <head>
         <title>BGG Data Dashboard</title>
         <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ url_for ('static', filename='lib/css/dc.css')}}">
         <link rel="stylesheet" href="{{ url_for ('static', filename='css/custom.css')}}">
     </head>
     <body>
-        <!-- bar graph for year published (just an test at this point) -->
+        <!-- bar graph for year published  -->
         <div id="year-bar-chart"></div>
         <script src="{{ url_for ('static', filename='lib/js/crossfilter.js')}}"></script>
         <script src="{{ url_for ('static', filename='lib/js/d3.js')}}"></script>
