@@ -63,6 +63,36 @@ function makeGraphs(error, game_infoJson) {
     playerCountMenu
         .dimension(playerCountDim)
         .group(gamesByPlayerCount);
+    
+
+    /**
+     * Play time selector:
+     */
+
+    var allPlayTimes = [15, 30, 60, 90, 120, 180];
+
+    var playTimeDim = games.dimension(function(d) {
+        // create an array of all possible play times
+        // using "minplaytime" and "maxplaytime" properties
+        // The allPlayTimes array shows the values we want
+        // available
+        var playTimes = [];
+        for (i in allPlayTimes) {
+            var time = allPlayTimes[i];
+            if (d["minplaytime"]<=time && time<=d["maxplaytime"]) {
+                playTimes.push(time);
+            }
+        }
+        return playTimes;  // at the moment it seems that playTimes always stays as the empty array. I cannot work out why!
+    }, true);
+
+    var gamesByPlayTime = playTimeDim.group();
+
+    var playTimeMenu = dc.selectMenu("#playtime-select");
+
+    playTimeMenu
+        .dimension(playTimeDim)
+        .group(gamesByPlayTime);
 
 
     /**
@@ -173,6 +203,45 @@ function makeGraphs(error, game_infoJson) {
         .othersGrouper(false)
         .elasticX(true)
         .xAxis().ticks(4);
+
+   /**
+     * ratings pie chart
+     */
+    var ratingsDim = games.dimension(function(d) {
+        var avgRating = d["stats"]["average"];
+        var lower = Math.floor(avgRating);
+        var upper = lower+1;
+        return String(lower) + "-" + String(upper);
+    });
+
+    var gamesByRating = ratingsDim.group();
+
+    var ratingsChart = dc.pieChart("#avg-rating-pie-chart");
+
+    ratingsChart
+        .height(250)
+        .width(400)
+        .radius(100)
+        .innerRadius(40)
+        .dimension(ratingsDim)
+        .group(gamesByRating)
+        .cap(10)
+        .othersGrouper(false);
+
+
+    /**
+     * total # of games display
+     */
+
+    var totalGamesND = dc.numberDisplay("#num-games-ND");
+
+    totalGamesND
+        .group(games.groupAll())
+        .valueAccessor(function(d) {
+            return d;
+        })
+        .formatNumber(d3.format("d"));
+
 
     dc.renderAll();
 }
