@@ -153,6 +153,26 @@ function makeGraphs(error, game_infoJson) {
         .elasticX(true)
         .xAxis().ticks(4);
 
+    /**
+     * publishers chart
+     */
+    var publishersDim = games.dimension(function(d) {
+        return d["publishers"];
+    }, true)
+
+    var gamesByPublisher = publishersDim.group();
+
+    var publishersChart = dc.rowChart("#publishers-row-chart");
+
+    publishersChart
+        .width(400)
+        .height(250)
+        .dimension(publishersDim)
+        .group(gamesByPublisher)
+        .rowsCap(10)
+        .othersGrouper(false)
+        .elasticX(true)
+        .xAxis().ticks(4);
 
     dc.renderAll();
 }
