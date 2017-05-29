@@ -9,6 +9,34 @@ function makeGraphs(error, game_infoJson) {
     var games = crossfilter(game_data);
 
     /**
+     * Game type selector (also called "subdomain" on BGG)
+     */
+    var typeDim = games.dimension(function(d) {
+        // need to creat our own array of type names for each game,
+        // because it is stored in a harder-to-accept way in the
+        // API data
+        var types = [];
+        var typeRankInfo = d["stats"]["ranks"];
+        var typeCount = typeRankInfo.length;
+        for (i=1; i<typeCount; i++) {  // start counting from 1 because the first entry
+            // is just for the overall "board game rank".
+            // Slice off last 5 characters, which are " Rank":
+            var typeString = typeRankInfo[i].friendlyname.slice(0, 
+            typeRankInfo[i].friendlyname.length - 5);
+            types.push(typeString);
+        }
+        return types;
+    }, true);
+
+    var gamesByType = typeDim.group();
+
+    var typeMenu = dc.selectMenu("#type-select");
+
+    typeMenu
+        .dimension(typeDim)
+        .group(gamesByType);
+
+    /**
      * Player count selector:
      */
     var playerCountDim = games.dimension(function(d) {
