@@ -132,5 +132,27 @@ function makeGraphs(error, game_infoJson) {
         .elasticX(true)
         .xAxis().ticks(4);
 
+    /**
+     * designers chart
+     */
+    var designersDim = games.dimension(function(d) {
+        return d["designers"];
+    }, true)
+
+    var gamesByDesigner = designersDim.group();
+
+    var designersChart = dc.rowChart("#designers-row-chart");
+
+    designersChart
+        .width(400)
+        .height(250)
+        .dimension(designersDim)
+        .group(gamesByDesigner)
+        .rowsCap(5)
+        .othersGrouper(false)
+        .elasticX(true)
+        .xAxis().ticks(4);
+
+
     dc.renderAll();
 }

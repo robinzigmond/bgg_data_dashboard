@@ -20,7 +20,7 @@ def index():
 def game_data():
     """
     A Flask view to serve the project data from
-    MondoDB in JSON format.
+    MongoDB in JSON format.
     """
 
     # A constant that defines the record fields that we wish to retrive
