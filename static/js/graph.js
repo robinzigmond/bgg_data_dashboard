@@ -9,6 +9,35 @@ function makeGraphs(error, game_infoJson) {
     var games = crossfilter(game_data);
 
     /**
+     * Player count selector:
+     */
+    var playerCountDim = games.dimension(function(d) {
+        // create an array of all allowed player counts
+        // using "minplayers" and "maxplayers" properties
+        // Will just use "7+" for all player counts above 6,
+        // and therefore need to return a string in all cases
+        var playerCounts = [];
+        for (players=1; players<7; players++) {
+            if (d["minplayers"]<=players && players<=d["maxplayers"]) {
+                playerCounts.push(String(players));
+            }
+        }
+        if (d["maxplayers"]>6) {
+            playerCounts.push("7+");
+        }
+        return playerCounts;
+    }, true)
+
+    var gamesByPlayerCount = playerCountDim.group();
+
+    var playerCountMenu = dc.selectMenu("#player-count-select");
+
+    playerCountMenu
+        .dimension(playerCountDim)
+        .group(gamesByPlayerCount);
+
+
+    /**
      * Year Published Chart:
      */
     var yearDim = games.dimension(function(d) {
@@ -17,8 +46,8 @@ function makeGraphs(error, game_infoJson) {
 
     var yearGroupedDim = games.dimension(function(d) {
         var year = d["yearpublished"];
-        if (year<1900) {
-            return "<1900";
+        if (year<1970) {
+            return "<1970";
         }
         else if (year<2000) {
             var startYear = 10*Math.floor(year/10);
@@ -36,8 +65,7 @@ function makeGraphs(error, game_infoJson) {
     
     var yearChart = dc.barChart("#year-bar-chart");
 
-    var yearGroups = ["<1900", "1900s", "1910s", "1920s", "1930s", "1940s", "1950s", 
-    "1960s", "1970s", "1980s", "1990s"];
+    var yearGroups = ["<1970", "1970s","1980s", "1990s"];
     for (year=2000; year<=maxYear; year++) {
         yearGroups.push(String(year));
     }
@@ -68,7 +96,7 @@ function makeGraphs(error, game_infoJson) {
 
     mechanicsChart
         .width(400)
-        .height(300)
+        .height(250)
         .dimension(mechanicsDim)
         .group(numGamesByMechanic)
         .rowsCap(10)
