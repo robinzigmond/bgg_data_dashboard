@@ -69,7 +69,7 @@ function makeGraphs(error, game_infoJson) {
      * Play time selector:
      */
 
-    var allPlayTimes = [15, 30, 60, 90, 120, 180];
+    var allPlayTimes = [15, 30, 45, 60, 90, 120, 180];
 
     var playTimeDim = games.dimension(function(d) {
         // create an array of all possible play times
@@ -93,6 +93,20 @@ function makeGraphs(error, game_infoJson) {
     playTimeMenu
         .dimension(playTimeDim)
         .group(gamesByPlayTime);
+
+
+    /**
+     * total # of games display
+     */
+
+    var totalGamesND = dc.numberDisplay("#num-games-ND");
+
+    totalGamesND
+        .group(games.groupAll())
+        .valueAccessor(function(d) {
+            return d;
+        })
+        .formatNumber(d3.format("d"));
 
 
     /**
@@ -228,20 +242,6 @@ function makeGraphs(error, game_infoJson) {
         .cap(10)
         .othersGrouper(false);
 
-
-    /**
-     * total # of games display
-     */
-
-    var totalGamesND = dc.numberDisplay("#num-games-ND");
-
-    totalGamesND
-        .group(games.groupAll())
-        .valueAccessor(function(d) {
-            return d;
-        })
-        .formatNumber(d3.format("d"));
-
-
+    
     dc.renderAll();
 }

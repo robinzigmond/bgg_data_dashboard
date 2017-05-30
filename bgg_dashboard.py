@@ -28,9 +28,9 @@ def game_data():
     # for now):
     FIELDS = {
         "_id": False, "mechanics": True, "publishers": True,
-        "minplayers": True, "designers": True, "categories": True,
-        "stats": True, "playingtime": True, "yearpublished": True,
-        "expansions": True, "maxplayers": True
+        "minplayers": True, "designers": True, "stats": True, 
+        "minplaytime": True, "maxplaytime": True, 
+        "yearpublished": True, "maxplayers": True
     }
 
     # Open a connection to MongoDB using a with statement such that the
