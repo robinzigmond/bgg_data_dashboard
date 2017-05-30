@@ -2,3 +2,8 @@
     font-size: 8px; /* make text smaller so the column labels don't overlap  
     (no longer necessary with reduced number of bars
 } */
+
+/* space out number displays from each other */
+.number-display {
+    margin: 0 10px;
+}

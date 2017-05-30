@@ -106,7 +106,69 @@ function makeGraphs(error, game_infoJson) {
         .valueAccessor(function(d) {
             return d;
         })
-        .formatNumber(d3.format("d"));
+        .formatNumber(d3.format(",d"));
+
+    /**
+     * average rating display
+     */
+
+    var avgRatingND = dc.numberDisplay("#avg-rating-ND");
+
+    // define reduce functions to compute average
+
+    function reduceAddRating(p, v) {
+        p.count++;
+        p.total += v["stats"]["average"];
+        return p;
+    }
+
+    function reduceRemoveRating(p, v) {
+        p.count--;
+        p.total -= v["stats"]["average"];
+        return p;
+    }
+
+    function reduceInitial() {
+        return {count: 0, total: 0};
+    }
+
+    function average(d) {
+        if (d.count != 0) {
+            return (d.total/d.count);
+        }
+        else {
+            return 0;
+        }
+    }
+
+    avgRatingND
+        .group(games.groupAll().reduce(reduceAddRating, reduceRemoveRating, reduceInitial))
+        .valueAccessor(average)
+        .formatNumber(d3.format(".2f"));
+
+    
+    /**
+     * average owners display
+     */
+
+    var avgOwnersND = dc.numberDisplay("#avg-owners-ND");
+
+        function reduceAddOwners(p, v) {
+        p.count++;
+        p.total += v["stats"]["owned"];
+        return p;
+    }
+
+    function reduceRemoveOwners(p, v) {
+        p.count--;
+        p.total -= v["stats"]["owned"];
+        return p;
+    }
+
+    avgOwnersND
+        .group(games.groupAll().reduce(reduceAddOwners, reduceRemoveOwners, reduceInitial))
+        .valueAccessor(average)
+        .formatNumber(d3.format(",.0f"));
 
 
     /**
