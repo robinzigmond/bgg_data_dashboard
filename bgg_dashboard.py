@@ -30,7 +30,7 @@ def game_data():
         "_id": False, "mechanics": True, "publishers": True,
         "minplayers": True, "designers": True, "stats": True, 
         "minplaytime": True, "maxplaytime": True, 
-        "yearpublished": True, "maxplayers": True
+        "yearpublished": True, "maxplayers": True, "name": True
     }
 
     # Open a connection to MongoDB using a with statement such that the

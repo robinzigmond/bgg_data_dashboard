@@ -283,14 +283,14 @@ function makeGraphs(error, game_infoJson) {
    /**
      * ratings pie chart
      */
-    var ratingsDim = games.dimension(function(d) {
+    var groupedRatingsDim = games.dimension(function(d) {
         var avgRating = d["stats"]["average"];
         var lower = Math.floor(avgRating);
         var upper = lower+1;
         return String(lower) + "-" + String(upper);
     });
 
-    var gamesByRating = ratingsDim.group();
+    var gamesByRating = groupedRatingsDim.group();
 
     var ratingsChart = dc.pieChart("#avg-rating-pie-chart");
 
@@ -299,11 +299,55 @@ function makeGraphs(error, game_infoJson) {
         .width(400)
         .radius(100)
         .innerRadius(40)
-        .dimension(ratingsDim)
+        .dimension(groupedRatingsDim)
         .group(gamesByRating)
         .cap(10)
         .othersGrouper(false);
 
-    
+    /**
+     * table display of games
+     */
+
+    var ratingsDim = games.dimension(function(d) {
+        return d["stats"]["average"];
+    })
+
+    var table = dc.dataTable("#table");
+
+    table
+        .dimension(ratingsDim)
+        .group(function(d) {
+            var ratingRoundedDown = Math.floor(d["stats"]["average"]);
+            return ratingRoundedDown + "-" + (ratingRoundedDown+1);
+        })
+        .columns([
+            {label: "Name",
+             format: function(d) {return d["name"];}},
+
+            {label: "Year Published",
+             format: function(d) {return d["yearpublished"];}},
+
+            {label: "Average Rating",
+             format: function(d) {return d["stats"]["average"];}},
+
+            {label: "Number of Owners",
+             format: function(d) {return d["stats"]["owned"];}}/*,
+
+            {label: "Minimum # of Players",
+             format: function(d) {return d["minplayers"];}},
+
+            {label: "Maximum # of Players",
+             format: function(d) {return d["maxplayers"];}},
+
+            {label: "Minimum playtime (minutes)",
+             format: function(d) {return d["minplaytime"];}},
+
+            {label: "Maximum playtime (minutes)",
+             format: function(d) {return d["maxplaytime"];}}*/
+        ])
+        .sortBy(function(d) {return d["stats"]["average"]})
+        .order(d3.descending)
+        .size(10);
+
     dc.renderAll();
 }

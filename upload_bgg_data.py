@@ -3,7 +3,7 @@ import boardgamegeek
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
-PAGES = 10  # constant for the number of pages of BGG rankings to pull games from. Each page contains 100 games.
+PAGES = 20  # constant for the number of pages of BGG rankings to pull games from. Each page contains 100 games.
 
 
 def get_game_ids(sortcriterion, pages=1, sortdirection="desc"):
@@ -92,10 +92,10 @@ def update_game_database(bgg_client, id_list):
     collection.insert_many(data_dict)
 
 
-bgg = boardgamegeek.BGGClient(requests_per_minute=10)
+bgg = boardgamegeek.BGGClient(requests_per_minute=1)
 # the default requests_per_minute is 30, but in practice this seems too fast
-# to be allowed access to all data needed. I have tried it at 15, which
-# usually works, but not 100% of the time. So far 10 seems to always work
-# - and curiously, does not seem any slower when it does work!
+# to be allowed access to all data needed. Curiously, does not seem signifcantly 
+# slower whenthis is reduced, and sometimes gives erros which I believ are due to
+# making too many requests - so I have taken it down to the minimum allowed.
 most_rated_ids = get_game_ids("numvoters", PAGES)  # get game ids for the number of games desired
 update_game_database(bgg, most_rated_ids)  # upload data to Mongo
