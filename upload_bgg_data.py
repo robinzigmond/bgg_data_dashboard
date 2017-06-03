@@ -1,12 +1,14 @@
+import time
 from urllib2 import urlopen
 import boardgamegeek
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
-PAGES = 20  # constant for the number of pages of BGG rankings to pull games from. Each page contains 100 games.
+HUNDREDS = 100  # constant for the number of id lists to get, each
+                # consisting of 10 games. 
 
 
-def get_game_ids(sortcriterion, pages=1, sortdirection="desc"):
+def get_game_ids(sortcriterion, firstpage, pages, sortdirection="desc"):
     """
     This function uses BeautifulSoup to return the BGG id #s
     of all games in the first n pages of the BGG database, where
@@ -21,7 +23,9 @@ def get_game_ids(sortcriterion, pages=1, sortdirection="desc"):
     """
     BASEURL = "https://boardgamegeek.com/browse/boardgame"
     game_ids = []
-    for pageno in range(1, pages+1):
+    for pageno in range(firstpage, firstpage+pages):
+        # time.sleep(10)
+        print "processing page no. %s" % pageno
         search_url = (BASEURL + "/page/" + str(pageno) + "?sort="
                       + sortcriterion + "&sortdir=" + sortdirection)
         page = urlopen(search_url)
@@ -66,36 +70,42 @@ def get_good_data(game):
     return data
 
 
-def update_game_database(bgg_client, id_list):
+def update_game_database(bgg_client, id_lists):
     """
-    This function takes a list of game ids, pulls all the data about the
-    corresponding games form the BGG API, then uploads them to the
-    MonogoDB running on localhost. The database is called "BGG", and the
-    collection is called "game_info". The previous data is first cleared,
-    so that when the program is run the database is updated with the
-    latest BGG data, instead of adding new data to the old (which would
+    This function takes a list of lists of game ids, pulls all the data 
+    about the corresponding games from the BGG API, then uploads them 
+    to the MongoDB running on localhost. The database is called "BGG", 
+    and the collection is called "game_info". The previous data is first 
+    cleared, so that when the program is run the database is updated with 
+    the latest BGG data, instead of adding new data to the old (which would
     introduce many duplicates and make the database grow huge over time).
     """
-    # first get game data from API. The following API call returns a
-    # list of objects representing the games: 
-    games = bgg_client.game_list(game_id_list=id_list)
-    # for each game, the .data() method returns a dictionary of the
-    # game's data. We pack those dictionaries into a list
-    data_dict = map(get_good_data, games)
     # create connection:
-    client = MongoClient()
+    client = MongoClient(host="localhost", port=27017)
     db = client.BGG
     collection = db.game_info
     # first wipe previous data
     collection.delete_many({})
-    # upload new data
-    collection.insert_many(data_dict)
+    counter = 1
+    for list in id_lists:
+        time.sleep(10)
+        print "trying to upload API data for hundred no. %s of %s" % (counter, HUNDREDS)
+        # first get game data from API. The following API call returns a
+        # list of objects representing the games: 
+        games = bgg_client.game_list(game_id_list=list)
+        # for each game, the .data() method returns a dictionary of the
+        # game's data. We pack those dictionaries into a list
+        data_dict = map(get_good_data, games)
+        # upload new data
+        collection.insert_many(data_dict)
+        print "successfully uploaded to MongoDB!"
+        counter = counter+1
 
 
-bgg = boardgamegeek.BGGClient(requests_per_minute=1)
+bgg = boardgamegeek.BGGClient(requests_per_minute=10)
 # the default requests_per_minute is 30, but in practice this seems too fast
-# to be allowed access to all data needed. Curiously, does not seem signifcantly 
-# slower whenthis is reduced, and sometimes gives erros which I believ are due to
-# making too many requests - so I have taken it down to the minimum allowed.
-most_rated_ids = get_game_ids("numvoters", PAGES)  # get game ids for the number of games desired
-update_game_database(bgg, most_rated_ids)  # upload data to Mongo
+# to be allowed access to all data needed.
+id_lists = []
+for i in range (0, HUNDREDS):
+    id_lists.append(get_game_ids("numvoters", i+1, 1))
+update_game_database(bgg, id_lists)  # upload data to Mongo
