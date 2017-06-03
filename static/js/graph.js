@@ -390,14 +390,16 @@ function makeGraphs(error, game_infoJson) {
           d3.select('#size').text(ratingsDim.top(Infinity).length);
       }
       
-      function update() {
+      // these functions are deliberately defined as global variables,
+      // so that they can be called by onlick attributes in the html
+   
+      update = function() {
           table.beginSlice(offset-1);
           table.endSlice(offset+pageSize-1);
           display();
       }
       
-      // these functions are deliberately defined as global variables,
-      // so that they can be called by onlick attributes in the html
+ 
       next = function() {
           offset += pageSize;
           update();
