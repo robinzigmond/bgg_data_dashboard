@@ -23,13 +23,11 @@ def game_data():
     MongoDB in JSON format.
     """
 
-    # A constant that defines the record fields that we wish to retrive
-    # (almost certainly more than I will use, but keeping options open
-    # for now):
+    # A constant that defines the record fields that we wish to retrieve:
     FIELDS = {
         "_id": False, "mechanics": True, "publishers": True,
         "minplayers": True, "designers": True, "stats": True, 
-        "minplaytime": True, "maxplaytime": True, 
+        "minplaytime": True, "maxplaytime": True, "id": True,
         "yearpublished": True, "maxplayers": True, "name": True
     }
 

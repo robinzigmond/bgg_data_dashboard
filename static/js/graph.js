@@ -96,6 +96,31 @@ function makeGraphs(error, game_infoJson) {
 
 
     /**
+     * select for minimum number of ratings
+     */
+
+    var possibleMins = [100, 200, 500, 1000, 2000, 5000, 10000];
+
+    var minRatingsDim = games.dimension(function(d) {
+        var moreRatingsThan = []
+        for (i in possibleMins) {
+            if (possibleMins[i] < d["stats"]["usersrated"]) {
+                moreRatingsThan.push(possibleMins[i]);
+            }
+        }
+        return moreRatingsThan;
+    }, true);
+
+    var gamesByMinRatings = minRatingsDim.group();
+
+    var minRatingsMenu = dc.selectMenu("#min-ratings-select");
+
+    minRatingsMenu
+        .dimension(minRatingsDim)
+        .group(gamesByMinRatings);
+
+
+    /**
      * total # of games display
      */
 
@@ -322,7 +347,8 @@ function makeGraphs(error, game_infoJson) {
         })
         .columns([
             {label: "Name",
-             format: function(d) {return d["name"];}},
+             format: function(d) {return "<a href='https://boardgamegeek.com/boardgame/"
+                 + d["id"] + "/' target='_blank'>" + d["name"] + "</a>";}},
 
             {label: "Year Published",
              format: function(d) {return d["yearpublished"];}},
