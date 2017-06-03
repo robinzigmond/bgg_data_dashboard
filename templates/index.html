@@ -34,7 +34,12 @@
         <!-- pie chart for average rating -->
         <div id="avg-rating-pie-chart"></div>
         <!-- data table of top-rated games among the selection -->
-        <div id="table"></div>
+        <table id="table"></table>
+        <div id="paging">
+            Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
+            <button id="prev" onclick="prev()">Previous</button>
+            <button id="next" onclick="next()">Next</button>
+        </div>
         <script src="{{ url_for ('static', filename='lib/js/crossfilter.js')}}"></script>
         <script src="{{ url_for ('static', filename='lib/js/d3.js')}}"></script>
         <script src="{{ url_for ('static', filename='lib/js/dc.js')}}"></script>

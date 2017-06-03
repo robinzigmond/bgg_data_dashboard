@@ -96,7 +96,7 @@ def update_game_database(bgg_client, id_lists):
         collection.delete_many({})
         counter = 0
         for list in id_lists:
-            time.sleep(5)  # pause to prevent API throttling
+            time.sleep(10)  # pause to prevent API throttling
             counter = counter+1
             print "trying to upload API data for page %s of %s" % (counter, PAGES)
             # first get game data from API. The following API call returns a

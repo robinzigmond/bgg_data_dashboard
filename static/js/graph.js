@@ -356,8 +356,8 @@ function makeGraphs(error, game_infoJson) {
             {label: "Average Rating",
              format: function(d) {return d["stats"]["average"];}},
 
-            {label: "Number of Owners",
-             format: function(d) {return d["stats"]["owned"];}}/*,
+            {label: "Number of Ratings",
+             format: function(d) {return d["stats"]["usersrated"];}}/*,
 
             {label: "Minimum # of Players",
              format: function(d) {return d["minplayers"];}},
@@ -373,7 +373,43 @@ function makeGraphs(error, game_infoJson) {
         ])
         .sortBy(function(d) {return d["stats"]["average"]})
         .order(d3.descending)
-        .size(10);
+        .size(Infinity);
 
+      // implement table pagination, followig the example in the dc docs
+      var offset = 1, pageSize = 25;
+      
+      function display() {
+          d3.select('#begin')
+            .text(offset);
+          d3.select('#end')
+            .text(offset + pageSize - 1);
+          d3.select('#prev')
+            .attr('disabled', offset-pageSize<0 ? 'true' : null);
+          d3.select('#next')
+            .attr('disabled', offset+pageSize>=(ratingsDim.top(Infinity).length) ? 'true' : null);
+          d3.select('#size').text(ratingsDim.top(Infinity).length);
+      }
+      
+      function update() {
+          table.beginSlice(offset-1);
+          table.endSlice(offset+pageSize-1);
+          display();
+      }
+      
+      // these functions are deliberately defined as global variables,
+      // so that they can be called by onlick attributes in the html
+      next = function() {
+          offset += pageSize;
+          update();
+          table.redraw();
+      }
+      
+      prev = function() {
+          offset -= pageSize;
+          update();
+          table.redraw();
+      }
+
+    update();
     dc.renderAll();
 }
