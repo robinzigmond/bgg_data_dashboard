@@ -1,13 +1,18 @@
-/* #year-bar-chart .axis text {
-    font-size: 8px; /* make text smaller so the column labels don't overlap  
-    (no longer necessary with reduced number of bars
-} */
-
-/* space out number displays from each other */
-.number-display {
-    margin: 0 10px;
+h4 {
+    font-weight: normal;
 }
 
-#results-table {
+.clear {
     clear: both;
+}
+
+.select, .number, .other-charts {
+    display: inline-flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#year-bar-chart, #year-bar-chart svg {
+    width: 100%;
 }

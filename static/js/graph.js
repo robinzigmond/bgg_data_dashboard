@@ -230,8 +230,8 @@ function makeGraphs(error, game_infoJson) {
     }
 
     yearChart
-        .width(800)
-        .height(150)
+        /* .width(800)
+        .height(150) */
         // .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
         .group(numGamesByYear)

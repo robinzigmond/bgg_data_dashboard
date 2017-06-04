@@ -9,35 +9,62 @@
         <link rel="stylesheet" href="{{ url_for ('static', filename='css/custom.css')}}">
     </head>
     <body onclick="update()">
-        <!-- select by "type" (strategy game, wargame, family game etc.) -->
-        <div id="type-select"></div>
-        <!-- select by player count -->
-        <div id="player-count-select"></div>
-        <!-- select by playtime -->
-        <div id="playtime-select"></div>
-        <!-- select minimum number of ratings in games seen -->
-        <div id="min-ratings-select"></div>
-        <!-- display number of games selected -->
-        <div id="num-games-ND"></div>
-        <!-- display average rating (an average of averages!) -->
-        <div id="avg-rating-ND"></div>
-        <!-- display average number of ratings -->
-        <div id="avg-num-ratings-ND"></div>
+        <div class="select">
+            <!-- select by "type" (strategy game, wargame, family game etc.) -->
+            <div class="clear">
+                <h4>Select game type:</h4>
+                <div id="type-select"></div>
+            </div>
+            <!-- select by player count -->
+            <div class="clear">
+                <h4>Select number of players supported:</h4>
+                <div id="player-count-select"></div>
+            </div>
+            <!-- select by playtime -->
+            <div class="clear">
+                <h4>Select possible playtime:</h4>
+                <div id="playtime-select"></div>
+            </div>
+            <!-- select minimum number of ratings in games seen -->
+            <div class="clear">
+                <h4>Select minimum number of ratings:</h4>
+                <div id="min-ratings-select"></div>
+            </div>
+        </div>
+        <div class="number">
+            <!-- display number of games selected -->
+            <div class="clear">
+                <h4># of games in current selection:</h4>
+                <div id="num-games-ND"></div>
+            </div>
+            <!-- display average rating (an average of averages!) -->
+            <div class="clear">
+                <h4>Average rating of selected games:</h4>
+                <div id="avg-rating-ND"></div>
+            </div>
+            <!-- display average number of ratings -->
+            <div class="clear">
+                <h4>Average number of ratings for selected games:</h4>
+                <div id="avg-num-ratings-ND"></div>
+            </div>
+        </div>
         <!-- bar graph for year published  -->
         <div id="year-bar-chart"></div>
-        <!-- row chart for mechanics -->
-        <div id="mechanics-row-chart"></div>
-        <!-- row chart for categories -->
-        <div id="categories-row-chart"></div>
-        <!-- row chart for designers -->
-        <div id="designers-row-chart"></div>
-        <!-- row chart for publishers -->
-        <div id="publishers-row-chart"></div>
-        <!-- pie chart for average rating -->
-        <div id="avg-rating-pie-chart"></div>
+        <div class="clear other-charts">
+            <!-- row chart for mechanics -->
+            <div id="mechanics-row-chart"></div>
+            <!-- row chart for categories -->
+            <div id="categories-row-chart"></div>
+            <!-- row chart for designers -->
+            <div id="designers-row-chart"></div>
+            <!-- row chart for publishers -->
+            <div id="publishers-row-chart"></div>
+            <!-- pie chart for average rating -->
+            <div id="avg-rating-pie-chart"></div>
+        </div>
         <!-- data table of top-rated games among the selection -->
         <div id="results-table">
-            <table id="table"></table>
+            <table id="table" class="clear"></table>
             <div id="paging">
                 Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
                 <button id="prev" onclick="prev()">Previous</button>
