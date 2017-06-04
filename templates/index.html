@@ -21,8 +21,8 @@
         <div id="num-games-ND"></div>
         <!-- display average rating (an average of averages!) -->
         <div id="avg-rating-ND"></div>
-        <!-- display average number of owners -->
-        <div id="avg-owners-ND"></div>
+        <!-- display average number of ratings -->
+        <div id="avg-num-ratings-ND"></div>
         <!-- bar graph for year published  -->
         <div id="year-bar-chart"></div>
         <!-- row chart for mechanics -->
@@ -34,11 +34,13 @@
         <!-- pie chart for average rating -->
         <div id="avg-rating-pie-chart"></div>
         <!-- data table of top-rated games among the selection -->
-        <table id="table"></table>
-        <div id="paging">
-            Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
-            <button id="prev" onclick="prev()">Previous</button>
-            <button id="next" onclick="next()">Next</button>
+        <div id="results-table">
+            <table id="table"></table>
+            <div id="paging">
+                Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
+                <button id="prev" onclick="prev()">Previous</button>
+                <button id="next" onclick="next()">Next</button>
+            </div>
         </div>
         <script src="{{ url_for ('static', filename='lib/js/crossfilter.js')}}"></script>
         <script src="{{ url_for ('static', filename='lib/js/d3.js')}}"></script>

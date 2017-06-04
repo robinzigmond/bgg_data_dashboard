@@ -173,25 +173,25 @@ function makeGraphs(error, game_infoJson) {
 
     
     /**
-     * average owners display
+     * average # of ratings display
      */
 
-    var avgOwnersND = dc.numberDisplay("#avg-owners-ND");
+    var avgNumRatingsND = dc.numberDisplay("#avg-num-ratings-ND");
 
-        function reduceAddOwners(p, v) {
+    function reduceAddNumRatings(p, v) {
         p.count++;
-        p.total += v["stats"]["owned"];
+        p.total += v["stats"]["usersrated"];
         return p;
     }
 
-    function reduceRemoveOwners(p, v) {
+    function reduceRemoveNumRatings(p, v) {
         p.count--;
-        p.total -= v["stats"]["owned"];
+        p.total -= v["stats"]["usersrated"];
         return p;
     }
 
-    avgOwnersND
-        .group(games.groupAll().reduce(reduceAddOwners, reduceRemoveOwners, reduceInitial))
+    avgNumRatingsND
+        .group(games.groupAll().reduce(reduceAddNumRatings, reduceRemoveNumRatings, reduceInitial))
         .valueAccessor(average)
         .formatNumber(d3.format(",.0f"));
 

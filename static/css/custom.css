@@ -7,3 +7,7 @@
 .number-display {
     margin: 0 10px;
 }
+
+#results-table {
+    clear: both;
+}
