@@ -232,7 +232,7 @@ function makeGraphs(error, game_infoJson) {
     yearChart
         .width(800)
         .height(150)
-        .margins({top: 10, right: 50, bottom: 30, left: 50})
+        // .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
         .transitionDuration(500)
@@ -263,6 +263,27 @@ function makeGraphs(error, game_infoJson) {
         .elasticX(true)
         .xAxis().ticks(4);
 
+    /**
+     * categories chart:
+     */
+    var categoriesDim = games.dimension(function(d) {
+        return d.categories;
+    }, true);  // tell crossfilter that this dimension is an array
+
+    var numGamesByCategory = categoriesDim.group();
+
+    var categoriesChart = dc.rowChart("#categories-row-chart");
+
+    categoriesChart
+        .width(400)
+        .height(250)
+        .dimension(categoriesDim)
+        .group(numGamesByCategory)
+        .rowsCap(10)
+        .othersGrouper(false)
+        .elasticX(true)
+        .xAxis().ticks(4);
+    
     /**
      * designers chart
      */

@@ -25,10 +25,11 @@ def game_data():
 
     # A constant that defines the record fields that we wish to retrieve:
     FIELDS = {
-        "_id": False, "mechanics": True, "publishers": True,
-        "minplayers": True, "designers": True, "stats": True, 
-        "minplaytime": True, "maxplaytime": True, "id": True,
-        "yearpublished": True, "maxplayers": True, "name": True
+        "_id": False, "mechanics": True, "categories": True,
+        "publishers": True, "minplayers": True, "designers": True,
+        "stats": True, "minplaytime": True, "maxplaytime": True,
+        "id": True, "yearpublished": True, "maxplayers": True,
+        "name": True
     }
 
     # Open a connection to MongoDB using a with statement such that the
