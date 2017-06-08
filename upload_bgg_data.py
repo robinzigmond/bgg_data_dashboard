@@ -110,7 +110,7 @@ def update_game_database(bgg_client, id_lists):
             print "successfully uploaded to MongoDB!"
 
 
-bgg = boardgamegeek.BGGClient()
+bgg = boardgamegeek.BGGClient(requests_per_minute = 15)
 id_lists = []
 for i in range (0, PAGES):
     id_lists.append(get_game_ids("numvoters", i+1, 1))

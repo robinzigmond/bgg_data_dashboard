@@ -8,8 +8,8 @@
         <link rel="stylesheet" href="{{ url_for ('static', filename='lib/css/dc.css')}}">
         <link rel="stylesheet" href="{{ url_for ('static', filename='css/custom.css')}}">
     </head>
-    <body onclick="update()">
-        <div class="select">
+    <body>
+        <div class="flex-row" onclick="first()">
             <!-- select by "type" (strategy game, wargame, family game etc.) -->
             <div class="clear">
                 <h4>Select game type:</h4>
@@ -31,7 +31,7 @@
                 <div id="min-ratings-select"></div>
             </div>
         </div>
-        <div class="number">
+        <div class="flex-row">
             <!-- display number of games selected -->
             <div class="clear">
                 <h4># of games in current selection:</h4>
@@ -49,26 +49,42 @@
             </div>
         </div>
         <!-- bar graph for year published  -->
-        <div id="year-bar-chart"></div>
-        <div class="clear other-charts">
+        <div class="flex-row">
+            <div id="year-bar-chart" onclick="first()"></div>
+        </div>
+        <div class="flex-row" onclick="first()">
             <!-- row chart for mechanics -->
-            <div id="mechanics-row-chart"></div>
+            <div class="flex-column">
+                <div id="mechanics-row-chart"></div>
+                <button class="reset" onclick="clearMechanics()">Reset mechanics selection</button>
+            </div>
             <!-- row chart for categories -->
-            <div id="categories-row-chart"></div>
+            <div class="flex-column">
+                <div id="categories-row-chart"></div>
+                <button class="reset" onclick="clearCategories()">Reset categories selection</button>
+            </div>
             <!-- row chart for designers -->
-            <div id="designers-row-chart"></div>
+            <div class="flex-column">
+                <div id="designers-row-chart"></div>
+                <button class="reset" onclick="clearDesigners()">Reset designers selection</button>
+            </div>
             <!-- row chart for publishers -->
-            <div id="publishers-row-chart"></div>
+            <div class="flex-column">
+                <div id="publishers-row-chart"></div>
+                <button class="reset" onclick="clearPublishers()">Reset publishers selection</button>
+            </div>
             <!-- pie chart for average rating -->
             <div id="avg-rating-pie-chart"></div>
         </div>
         <!-- data table of top-rated games among the selection -->
-        <div id="results-table">
+        <div class="flex-column">
             <table id="table" class="clear"></table>
             <div id="paging">
                 Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
+                <button id="first" onclick="first()">First</button>
                 <button id="prev" onclick="prev()">Previous</button>
                 <button id="next" onclick="next()">Next</button>
+                <button id="last" onclick="last()">Last</button>
             </div>
         </div>
         <script src="{{ url_for ('static', filename='lib/js/crossfilter.js')}}"></script>

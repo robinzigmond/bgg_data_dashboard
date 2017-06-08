@@ -6,13 +6,16 @@ h4 {
     clear: both;
 }
 
-.select, .number, .other-charts {
-    display: inline-flex;
+.flex-row {
+    display: flex;
     flex-flow: row wrap;
-    align-items: center;
     justify-content: space-around;
+    align-items: center;
 }
 
-#year-bar-chart, #year-bar-chart svg {
-    width: 100%;
+.flex-column {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
 }

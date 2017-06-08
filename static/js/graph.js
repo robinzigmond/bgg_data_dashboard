@@ -230,8 +230,9 @@ function makeGraphs(error, game_infoJson) {
     }
 
     yearChart
-        /* .width(800)
-        .height(150) */
+        .width(800)
+        .minWidth(400)
+        /* .height(150) */
         // .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
@@ -396,14 +397,14 @@ function makeGraphs(error, game_infoJson) {
         .order(d3.descending)
         .size(Infinity);
 
-      // implement table pagination, followig the example in the dc docs
+      // implement table pagination, following the example in the dc docs
       var offset = 1, pageSize = 25;
       
       function display() {
           d3.select('#begin')
             .text(offset);
           d3.select('#end')
-            .text(offset + pageSize - 1);
+            .text(Math.min(offset + pageSize - 1, ratingsDim.top(Infinity).length));
           d3.select('#prev')
             .attr('disabled', offset-pageSize<0 ? 'true' : null);
           d3.select('#next')
@@ -419,8 +420,13 @@ function makeGraphs(error, game_infoJson) {
           table.endSlice(offset+pageSize-1);
           display();
       }
+
+      first = function() {
+          offset = 1;
+          update();
+          table.redraw();
+      }
       
- 
       next = function() {
           offset += pageSize;
           update();
@@ -431,6 +437,32 @@ function makeGraphs(error, game_infoJson) {
           offset -= pageSize;
           update();
           table.redraw();
+      }
+
+      last = function() {
+          offset = Math.floor(ratingsDim.top(Infinity).length/pageSize)*pageSize + 1;
+          update();
+          table.redraw();
+      }
+
+      clearMechanics = function() {
+          mechanicsChart.filter(null);
+          dc.redrawAll();
+      }
+
+      clearCategories = function() {
+          categoriesChart.filter(null);
+          dc.redrawAll();
+      }
+
+      clearDesigners = function() {
+          designersChart.filter(null);
+          dc.redrawAll();
+      }
+
+      clearPublishers = function() {
+          publishersChart.filter(null);
+          dc.redrawAll();
       }
 
     update();
