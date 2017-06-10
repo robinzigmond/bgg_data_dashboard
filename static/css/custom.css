@@ -1,21 +1,44 @@
-h4 {
+h3, h4 {
     font-weight: normal;
-}
-
-.clear {
-    clear: both;
 }
 
 .flex-row {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .flex-column {
     display: flex;
     flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#main-charts {
+    flex: 2;
+}
+
+#ratings {
+    flex: 1;
+}
+
+#year-bar-chart .x text {
+    font-size: 8px;
+}
+
+.num-display {
+    display: flex;
+    flex-flow: column wrap;
     justify-content: space-around;
     align-items: center;
+    border: 1px solid black;
+    margin-top: 15px;
+}
+
+.num-display .number-display {
+    font-size: 20px;
+    font-weight: bold;
+    color: green;
 }

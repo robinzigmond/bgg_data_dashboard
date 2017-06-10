@@ -205,7 +205,10 @@ function makeGraphs(error, game_infoJson) {
 
     var yearGroupedDim = games.dimension(function(d) {
         var year = d["yearpublished"];
-        if (year<1970) {
+        if (!year) {
+            return "not given";
+        }
+        else if (year<1970) {
             return "<1970";
         }
         else if (year<2000) {
@@ -224,14 +227,14 @@ function makeGraphs(error, game_infoJson) {
     
     var yearChart = dc.barChart("#year-bar-chart");
 
-    var yearGroups = ["<1970", "1970s","1980s", "1990s"];
+    var yearGroups = ["not given", "<1970", "1970s","1980s", "1990s"];
     for (year=2000; year<=maxYear; year++) {
         yearGroups.push(String(year));
     }
 
     yearChart
         .width(800)
-        .minWidth(400)
+        .minWidth(500)
         /* .height(150) */
         // .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
@@ -240,7 +243,7 @@ function makeGraphs(error, game_infoJson) {
         .x(d3.scale.ordinal().domain(yearGroups))
         .xUnits(dc.units.ordinal)  // required for graph to display correctly with ordinal scale
         .elasticY(true)
-        .xAxisLabel("Year Published")
+        // .xAxisLabel("Year Published")
         .yAxis().ticks(4);
 
     /**
@@ -342,7 +345,7 @@ function makeGraphs(error, game_infoJson) {
     var ratingsChart = dc.pieChart("#avg-rating-pie-chart");
 
     ratingsChart
-        .height(250)
+        .height(300)
         .width(400)
         .radius(100)
         .innerRadius(40)
@@ -373,7 +376,11 @@ function makeGraphs(error, game_infoJson) {
                  + d["id"] + "/' target='_blank'>" + d["name"] + "</a>";}},
 
             {label: "Year Published",
-             format: function(d) {return d["yearpublished"];}},
+             format: function(d) {if (!d["yearpublished"]) {
+                 return "not given";
+                } else {
+                 return d["yearpublished"];
+                }}},
 
             {label: "Average Rating",
              format: function(d) {return d["stats"]["average"];}},

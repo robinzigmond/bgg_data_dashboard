@@ -11,80 +11,95 @@
     <body>
         <div class="flex-row" onclick="first()">
             <!-- select by "type" (strategy game, wargame, family game etc.) -->
-            <div class="clear">
+            <div>
                 <h4>Select game type:</h4>
                 <div id="type-select"></div>
             </div>
             <!-- select by player count -->
-            <div class="clear">
+            <div>
                 <h4>Select number of players supported:</h4>
                 <div id="player-count-select"></div>
             </div>
             <!-- select by playtime -->
-            <div class="clear">
-                <h4>Select possible playtime:</h4>
+            <div>
+                <h4>Select possible playtime (minutes):</h4>
                 <div id="playtime-select"></div>
             </div>
             <!-- select minimum number of ratings in games seen -->
-            <div class="clear">
+            <div>
                 <h4>Select minimum number of ratings:</h4>
                 <div id="min-ratings-select"></div>
             </div>
         </div>
         <div class="flex-row">
             <!-- display number of games selected -->
-            <div class="clear">
+            <div class="num-display">
                 <h4># of games in current selection:</h4>
                 <div id="num-games-ND"></div>
             </div>
             <!-- display average rating (an average of averages!) -->
-            <div class="clear">
+            <div class="num-display">
                 <h4>Average rating of selected games:</h4>
                 <div id="avg-rating-ND"></div>
             </div>
             <!-- display average number of ratings -->
-            <div class="clear">
+            <div class="num-display">
                 <h4>Average number of ratings for selected games:</h4>
                 <div id="avg-num-ratings-ND"></div>
             </div>
         </div>
-        <!-- bar graph for year published  -->
         <div class="flex-row">
-            <div id="year-bar-chart" onclick="first()"></div>
-        </div>
-        <div class="flex-row" onclick="first()">
-            <!-- row chart for mechanics -->
-            <div class="flex-column">
-                <div id="mechanics-row-chart"></div>
-                <button class="reset" onclick="clearMechanics()">Reset mechanics selection</button>
+            <div id="main-charts" class="flex-column">
+                <!-- bar graph for year published  -->
+                <div class="flex-row">
+                    <div class="flex-column">
+                        <h3>Year published/released:</h3>
+                        <div id="year-bar-chart" onclick="first()"></div>
+                    </div>
+                </div>
+                <div class="flex-row" onclick="first()">
+                    <!-- row chart for mechanics -->
+                    <div class="flex-column">
+                        <h3>Most common mechanics used:</h3>
+                        <div id="mechanics-row-chart"></div>
+                        <button class="reset" onclick="clearMechanics()">Reset mechanics selection</button>
+                    </div>
+                    <!-- row chart for categories -->
+                    <div class="flex-column">
+                        <h3>Most common game categories:</h3>
+                        <div id="categories-row-chart"></div>
+                        <button class="reset" onclick="clearCategories()">Reset categories selection</button>
+                    </div>
+                    <!-- row chart for designers -->
+                    <div class="flex-column">
+                        <h3>Most common designers:</h3>
+                        <div id="designers-row-chart"></div>
+                        <button class="reset" onclick="clearDesigners()">Reset designers selection</button>
+                    </div>
+                    <!-- row chart for publishers -->
+                    <div class="flex-column">
+                        <h3>Most common publishers:</h3>
+                        <div id="publishers-row-chart"></div>
+                        <button class="reset" onclick="clearPublishers()">Reset publishers selection</button>
+                    </div>
+                </div>
             </div>
-            <!-- row chart for categories -->
-            <div class="flex-column">
-                <div id="categories-row-chart"></div>
-                <button class="reset" onclick="clearCategories()">Reset categories selection</button>
-            </div>
-            <!-- row chart for designers -->
-            <div class="flex-column">
-                <div id="designers-row-chart"></div>
-                <button class="reset" onclick="clearDesigners()">Reset designers selection</button>
-            </div>
-            <!-- row chart for publishers -->
-            <div class="flex-column">
-                <div id="publishers-row-chart"></div>
-                <button class="reset" onclick="clearPublishers()">Reset publishers selection</button>
-            </div>
-            <!-- pie chart for average rating -->
-            <div id="avg-rating-pie-chart"></div>
-        </div>
-        <!-- data table of top-rated games among the selection -->
-        <div class="flex-column">
-            <table id="table" class="clear"></table>
-            <div id="paging">
-                Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
-                <button id="first" onclick="first()">First</button>
-                <button id="prev" onclick="prev()">Previous</button>
-                <button id="next" onclick="next()">Next</button>
-                <button id="last" onclick="last()">Last</button>
+            <!-- data table of top-rated games among the selection -->
+            <div class="flex-column" id="ratings">
+                <!-- pie chart for average rating -->
+                <div class="flex-column">
+                    <h3>Breakdown of average ratings:</h3>
+                    <div id="avg-rating-pie-chart"></div>
+                </div>
+                <h3>List of games in current selection:</h3>
+                <table id="table"></table>
+                <div id="paging">
+                    Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>
+                    <button id="first" onclick="first()">First</button>
+                    <button id="prev" onclick="prev()">Previous</button>
+                    <button id="next" onclick="next()">Next</button>
+                    <button id="last" onclick="last()">Last</button>
+                </div>
             </div>
         </div>
         <script src="{{ url_for ('static', filename='lib/js/crossfilter.js')}}"></script>
