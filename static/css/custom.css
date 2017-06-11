@@ -1,4 +1,4 @@
-h3, h4 {
+h4, h5 {
     font-weight: normal;
 }
 
@@ -7,6 +7,10 @@ h3, h4 {
     flex-flow: row wrap;
     justify-content: space-around;
     align-items: flex-start;
+}
+
+#select {
+    justify-content: flex-start;
 }
 
 .flex-column {
@@ -23,6 +27,15 @@ h3, h4 {
 #ratings {
     flex: 1;
 }
+
+/* #main-charts .dc-chart {
+    flex: 1 0 400px;
+}
+
+#main-charts .dc-chart:before, #main-charts .dc-chart:after {
+    display: flex;
+    flex-wrap: wrap;
+} */
 
 #year-bar-chart .x text {
     font-size: 8px;

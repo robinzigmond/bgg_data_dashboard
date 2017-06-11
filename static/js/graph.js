@@ -12,7 +12,7 @@ function makeGraphs(error, game_infoJson) {
      * Game type selector (also called "subdomain" on BGG)
      */
     var typeDim = games.dimension(function(d) {
-        // need to creat our own array of type names for each game,
+        // need to create our own array of type names for each game,
         // because it is stored in a harder-to-accept way in the
         // API data
         var types = [];
@@ -104,7 +104,7 @@ function makeGraphs(error, game_infoJson) {
     var minRatingsDim = games.dimension(function(d) {
         var moreRatingsThan = []
         for (i in possibleMins) {
-            if (possibleMins[i] < d["stats"]["usersrated"]) {
+            if (possibleMins[i] <= d["stats"]["usersrated"]) {
                 moreRatingsThan.push(possibleMins[i]);
             }
         }
@@ -304,7 +304,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(designersDim)
         .group(gamesByDesigner)
-        .rowsCap(5)
+        .rowsCap(10)
         .othersGrouper(false)
         .elasticX(true)
         .xAxis().ticks(4);
@@ -408,15 +408,19 @@ function makeGraphs(error, game_infoJson) {
       var offset = 1, pageSize = 25;
       
       function display() {
-          d3.select('#begin')
+          d3.select("#begin")
             .text(offset);
-          d3.select('#end')
+          d3.select("#end")
             .text(Math.min(offset + pageSize - 1, ratingsDim.top(Infinity).length));
-          d3.select('#prev')
-            .attr('disabled', offset-pageSize<0 ? 'true' : null);
-          d3.select('#next')
-            .attr('disabled', offset+pageSize>=(ratingsDim.top(Infinity).length) ? 'true' : null);
-          d3.select('#size').text(ratingsDim.top(Infinity).length);
+          d3.select("#prev")
+            .attr("disabled", offset-pageSize<0 ? "true" : null);
+          d3.select("#next")
+            .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
+          d3.select("#size").text(ratingsDim.top(Infinity).length);
+          d3.select("#first")
+            .attr("disabled", offset==1 ? "true" : null);
+          d3.select("#last")
+            .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
       }
       
       // these functions are deliberately defined as global variables,
