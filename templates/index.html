@@ -49,34 +49,34 @@
                 <div id="avg-num-ratings-ND"></div>
             </div>
         </div>
-        <!-- bar graph for year published  -->
-        <div class="flex-column">
-            <h4>Year published/released:</h4>
-            <div id="year-bar-chart" onclick="first()"></div>
-        </div>
         <div class="flex-row">
-            <div id="main-charts" class="flex-row">
-                 <div class="flex-row" onclick="first()">
+            <div id="main-charts" class="flex-row"  onclick="first()">
+                <!-- bar graph for year published  -->
+                <div class="flex-column chart-box">
+                    <h4>Year published/released:</h4>
+                    <div id="year-bar-chart"></div>
+                </div>
+                 <div class="flex-row">
                     <!-- row chart for mechanics -->
-                    <div class="flex-column">
+                    <div class="flex-column chart-box">
                         <h4>Most common mechanics used:</h4>
                         <div id="mechanics-row-chart"></div>
                         <button class="reset" onclick="clearMechanics()">Reset mechanics selection</button>
                     </div>
                     <!-- row chart for categories -->
-                    <div class="flex-column">
+                    <div class="flex-column chart-box">
                         <h4>Most common game categories:</h4>
                         <div id="categories-row-chart"></div>
                         <button class="reset" onclick="clearCategories()">Reset categories selection</button>
                     </div>
                     <!-- row chart for designers -->
-                    <div class="flex-column">
+                    <div class="flex-column chart-box">
                         <h4>Most common designers:</h4>
                         <div id="designers-row-chart"></div>
                         <button class="reset" onclick="clearDesigners()">Reset designers selection</button>
                     </div>
                     <!-- row chart for publishers -->
-                    <div class="flex-column">
+                    <div class="flex-column chart-box">
                         <h4>Most common publishers:</h4>
                         <div id="publishers-row-chart"></div>
                         <button class="reset" onclick="clearPublishers()">Reset publishers selection</button>
@@ -86,7 +86,7 @@
             <!-- data table of top-rated games among the selection -->
             <div class="flex-column" id="ratings">
                 <!-- pie chart for average rating -->
-                <div class="flex-column">
+                <div class="flex-column chart-box" onclick="first()">
                     <h4>Breakdown of average ratings:</h4>
                     <div id="avg-rating-pie-chart"></div>
                 </div>

@@ -227,7 +227,7 @@ function makeGraphs(error, game_infoJson) {
     
     var yearChart = dc.barChart("#year-bar-chart");
 
-    var yearGroups = ["not given", "<1970", "1970s","1980s", "1990s"];
+    var yearGroups = ["<1970", "1970s","1980s", "1990s"];
     for (year=2000; year<=maxYear; year++) {
         yearGroups.push(String(year));
     }
@@ -239,7 +239,7 @@ function makeGraphs(error, game_infoJson) {
         // .margins({top: 10, right: 50, bottom: 30, left: 50})
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
-        .transitionDuration(500)
+        .transitionDuration(1000)
         .x(d3.scale.ordinal().domain(yearGroups))
         .xUnits(dc.units.ordinal)  // required for graph to display correctly with ordinal scale
         .elasticY(true)
@@ -262,6 +262,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(mechanicsDim)
         .group(numGamesByMechanic)
+        .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
         .elasticX(true)
@@ -283,6 +284,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(categoriesDim)
         .group(numGamesByCategory)
+        .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
         .elasticX(true)
@@ -304,6 +306,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(designersDim)
         .group(gamesByDesigner)
+        .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
         .elasticX(true)
@@ -325,6 +328,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(publishersDim)
         .group(gamesByPublisher)
+        .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
         .elasticX(true)
@@ -345,12 +349,13 @@ function makeGraphs(error, game_infoJson) {
     var ratingsChart = dc.pieChart("#avg-rating-pie-chart");
 
     ratingsChart
-        .height(300)
-        .width(400)
-        .radius(100)
-        .innerRadius(40)
+        .height(200)
+        .width(200)
+        // .radius(150)
+        .innerRadius(30)
         .dimension(groupedRatingsDim)
         .group(gamesByRating)
+        .transitionDuration(1000)
         .cap(10)
         .othersGrouper(false);
 
@@ -402,10 +407,11 @@ function makeGraphs(error, game_infoJson) {
         ])
         .sortBy(function(d) {return d["stats"]["average"]})
         .order(d3.descending)
-        .size(Infinity);
+        .size(Infinity)
+        .transitionDuration(1000);
 
       // implement table pagination, following the example in the dc docs
-      var offset = 1, pageSize = 25;
+      var offset = 1, pageSize = 15;
       
       function display() {
           d3.select("#begin")
@@ -451,7 +457,8 @@ function makeGraphs(error, game_infoJson) {
       }
 
       last = function() {
-          offset = Math.floor(ratingsDim.top(Infinity).length/pageSize)*pageSize + 1;
+          offset = Math.floor(ratingsDim.top(Infinity).length/pageSize)*pageSize + 1 - 
+                   (ratingsDim.top(Infinity).length/pageSize % 1 ? 0 : pageSize);
           update();
           table.redraw();
       }

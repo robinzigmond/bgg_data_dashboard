@@ -1,5 +1,18 @@
+body {
+    background-color: #22344b;
+    color: #fff;
+}
+
 h4, h5 {
     font-weight: normal;
+}
+
+a, a:visited {
+    color: #fff;
+}
+
+a:hover, a:active {
+    color: #b0c4de;
 }
 
 .flex-row {
@@ -37,8 +50,17 @@ h4, h5 {
     flex-wrap: wrap;
 } */
 
-#year-bar-chart .x text {
-    font-size: 8px;
+#year-bar-chart {
+    overflow: auto;
+}
+
+#year-bar-chart .axis text {
+    /* font-size: 8px; */
+    color: #fff;
+}
+
+.dc-chart .axis {
+    fill: #fff;
 }
 
 .num-display {
@@ -46,6 +68,7 @@ h4, h5 {
     flex-flow: column wrap;
     justify-content: space-around;
     align-items: center;
+    background-color: #91261e;
     border: 1px solid black;
     margin-top: 15px;
 }
@@ -53,5 +76,10 @@ h4, h5 {
 .num-display .number-display {
     font-size: 20px;
     font-weight: bold;
-    color: green;
 }
+
+/* .chart-box {
+    box-sizing: border-box;
+    margin: 2px 0;
+    padding: 2px;
+} */
