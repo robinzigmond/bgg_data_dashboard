@@ -10,6 +10,13 @@
         <link rel="stylesheet" href="{{ url_for ('static', filename='css/custom.css')}}">
     </head>
     <body>
+        <nav>
+            <h2 id="nav-title">Board Game Data Dashboard</h2>
+            <ul id="nav-list">
+                <li class="nav-link"><a href="#">Dashboard</a></li>
+                <li class="nav-link"><a href="#">About</a></li>
+            </ul>
+        </nav>
         <div class="flex-row" id="select" onclick="first()">
             <!-- select by "type" (strategy game, wargame, family game etc.) -->
             <div>

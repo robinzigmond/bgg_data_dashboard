@@ -1,6 +1,37 @@
 body {
     background-color: #22344b;
     color: #fff;
+    padding-top: 30px;
+}
+
+nav {
+    background-color: #91261e;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 5px 2px;
+}
+
+#nav-title, #nav-list {
+    display: inline-block;
+}
+
+#nav-title {
+    margin: 0;
+}
+
+#nav-list {
+    float: right;
+    list-style-type: none;
+    padding: 0;
+    margin: auto 0;
+}
+
+.nav-link {
+    display: block;
+    float: left;
+    padding: 6px;
 }
 
 h4, h5 {
@@ -13,6 +44,10 @@ a, a:visited {
 
 a:hover, a:active {
     color: #b0c4de;
+}
+
+button {
+    cursor: pointer;
 }
 
 .flex-row {
@@ -55,7 +90,7 @@ a:hover, a:active {
 }
 
 #year-bar-chart .axis text {
-    /* font-size: 8px; */
+    font-size: 8px;
     color: #fff;
 }
 
@@ -83,3 +118,9 @@ a:hover, a:active {
     margin: 2px 0;
     padding: 2px;
 } */
+
+/* make text disappear for rows representing zero games */
+/* doesn't work, for reasons I do not yet know!*/
+g.row rect[width=0]+text {
+    display: none;
+}

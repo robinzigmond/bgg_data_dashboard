@@ -227,7 +227,7 @@ function makeGraphs(error, game_infoJson) {
     
     var yearChart = dc.barChart("#year-bar-chart");
 
-    var yearGroups = ["<1970", "1970s","1980s", "1990s"];
+    var yearGroups = ["not given", "<1970", "1970s","1980s", "1990s"];
     for (year=2000; year<=maxYear; year++) {
         yearGroups.push(String(year));
     }
