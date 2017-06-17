@@ -51,6 +51,10 @@ button {
     cursor: pointer;
 }
 
+button[disabled] {
+    cursor: auto;
+}
+
 .flex-row {
     display: flex;
     flex-flow: row wrap;
