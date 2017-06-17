@@ -81,14 +81,18 @@ button[disabled] {
     flex: 1;
 }
 
+/* .chart-box {
+    flex-shrink: 0;
+} */
+
 /* #main-charts .dc-chart {
     flex: 1 0 400px;
-}
+} */
 
 #main-charts .dc-chart:before, #main-charts .dc-chart:after {
     display: flex;
     flex-wrap: wrap;
-} */
+}
 
 #year-bar-chart {
     overflow: auto;
@@ -111,6 +115,7 @@ button[disabled] {
     background-color: #91261e;
     border: 1px solid black;
     margin-top: 15px;
+    padding: 3px;
 }
 
 .num-display .number-display {
@@ -128,4 +133,20 @@ button[disabled] {
 /* doesn't work, for reasons I do not yet know!*/
 g.row rect[width=0]+text {
     display: none;
+}
+
+/* hide chart designed only for small-screen devices */
+.small-screen {
+    display: none;
+}
+
+/* change the displayed chart for small-screen devices */
+@media (max-width: 800px) {
+    .small-screen {
+        display: flex;
+    }
+
+    .large-screen {
+        display: none;
+    }
 }

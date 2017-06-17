@@ -42,9 +42,14 @@
     <div class="flex-row">
         <div id="main-charts" class="flex-row"  onclick="first()">
             <!-- bar graph for year published  -->
-            <div class="flex-column chart-box">
+            <div class="flex-column chart-box large-screen">
                 <h4>Year published/released:</h4>
                 <div id="year-bar-chart"></div>
+            </div>
+            <!-- alternative (row chart) for small-width screens -->
+            <div class="flex-column chart-box small-screen">
+                <h4>Year published/released:</h4>
+                <div id="year-row-chart"></div>
             </div>
             <div class="flex-row">
                 <!-- row chart for mechanics -->

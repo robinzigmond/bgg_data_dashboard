@@ -246,6 +246,23 @@ function makeGraphs(error, game_infoJson) {
         // .xAxisLabel("Year Published")
         .yAxis().ticks(4);
 
+    
+    /**
+     * alternative row chart for years, to display on narrow screens:
+     */
+
+    var yearChartAlt = dc.rowChart("#year-row-chart");
+
+    yearChartAlt
+        .width(400)
+        // .minWidth(400)
+        .height(600)
+        .dimension(yearGroupedDim)
+        .group(numGamesByYear)
+        .transitionDuration(1000)
+        .elasticX(true)
+        .xAxis().ticks(4);
+    
     /**
      * mechanics chart:
      */
