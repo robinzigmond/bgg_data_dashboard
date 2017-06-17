@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>(In)frequently asked questions</h2>
+    <h3>Where does the data come from?</h3>
+    <p>All the data from which the charts have been generated is from the <a href="https://www.boardgamegeek.com" target="_blank">
+    boardgamegeek</a> website - which as you probably know is the first place on the web to go to for information and discussion
+     about tabletop games of all kinds.</p>
+    <p>More specifically, all the data is extracted from BGG's XML API, which is described 
+    <a href="https://boardgamegeek.com/wiki/page/BGG_XML_API2" target="_blank">here</a>. Note that this means that any 
+    pecularities you find in the data (and there are plenty if you dig deep enough!) are due to BGG, rather than the 
+    page author.</p>
+    <h3>Which games have been included?</h3>
+    <p>Including every game in the BGG database would be neither practical nor useful. Although there are close to 100,000 games,
+    the vast majority of these games, whether old or new (and there has been an explosion of interest in tabletop games in 
+    the past 5-10 years, with ever more new ones being released), are long forgotten. Many are also not yet released, as
+    entries are added basically as soon as a new game is announced, at least by a major publisher. Such a vast amount of
+    data, the majority of it referring to games which are essentially unknown, would in my opinion render the data virtually
+    meaningless.</p> 
+    <p>And even if it were desirable to include data from every game on BGG, the somewhat obscuree "throttling" policy of the
+    BGG API - designed to prevent sever overload by generating sever errors if calls are made too frequently - would make
+    getting all that data far too time-consuming and error-prone.</p>
+    <p>So a compromise is necessary, between comprehensiveness on the one hand, and practicality on the other. I have chosen
+    quite arbitrarily to look at only 10,000 items from the BGG database, and to select those 10,000 with the most user ratings.
+    At present this means all games with more than ~90 ratings, but this number is bound to increase over time. And from those
+    10,000 I then remove all items which are listed as being expansions (as opposed to actual games that you can take home and
+    play straight away without needing to already have a certain game) - this is done in order to prevent certain popular game
+    series with many expansions (Catan, Dominion, Power Grid etc.) from completely dominating the dataset. Popular "franchises"
+    like these are already very well represented (by various spinoffs, rethemes and "standalone" expansions) as it is!</p>
+    <p>The criteria chosen for including games in my opinion errs slightly on the side of being too inclusive - so I have included
+    the option of filtering the data by a minimum number of ratings.</p>
+    <h3>What is meant by "mechanics", "categories" and "types"?</h3>
+    <p>These are all different criteria which BGG uses to classify games. There seems to be no hard and fast definition of what
+    precisely is meant by each, but as a long-time boardgamer and BGG user I would roughly classify it as follows:</p>
+    <ul>
+        <li>
+            <p>The <strong>mechanics</strong> are the core things that players must actually <em>do</em> in the game. (Note though
+            that most games have several different mechanics listed - and that quite frequently a particular mechanic may be
+            used in the game, but not as one of its "core" mechanics.)</p>
+        </li>
+        <li>
+            <p>A <strong>category</strong> of games is a fairly broad "family" of games with a similar "theme". Compared to
+            mechanics, it is less about what the game does from a "technical" point of view, and more to do with the "atmosphere"
+            that the game tries to evoke.</p>
+        </li>
+        <li>
+            <p>The <strong>type</strong> is somewhat similar to the category, but much more broad-brush, as there are only
+            8 different such types in the dataset (if you discount the bizarre "Accessory" category with only 1 entry).
+            It is generally a good indicator of the sort of games a particular gamer is likely to want or enjoy. Most are
+            fairly self-explanatory - apart from "Strategy Game" and "Thematic", which are to some extent used on BGG as 
+            codes for the old battleground between "Eurogames" (generally low-luck, low-conflict, family-friendly games 
+            originating in Germany in the early-mid 1990s, typically featuring wooden components) and "Ameritrash" (games
+            featuring heavy player interaction and even elimination, typically featuring many luck-driven mechanisms even
+            if they are in the end highly skill-based, and often featuring plastic components). Happily, since at least the
+            mid-2000s the distinction has lost much meaning, with most of the popular games of recent times incorporating
+            elements of both traditions - but it has never gone away, and most modern games can still clearly be recognised 
+            as descending primarily from one or the other.</p>
+        </li>
+    </ul>
+    <h3>Why do some categories (eg. Wargame, Children's Game) appear as both "types" and "categories"? Why are there quite a 
+    few games with the Wargame "type" but not in the Wargame "category" - and vice versa?</h3>
+    <p>I'm afraid that I can't answer that - I am not responsible for the data, only for presenting it in the ways I find
+    the most useful and/or interesting. This particular issue most likely has no rational explanation other than the semi-random
+    way these things were assigned when individual games were entered into the BGG database. Although it may be possible to
+    justify this in individual cases - look at the lists of individual games, and if you feel that strongly feel free to head
+    to the BGG forums and ask. Although I make no guarantees that you'll get any more enlightening answer than "because".</p>
+    <h3>Why are the average ratings so much higher for games from the last couple of years? Are games really getting that much
+    better?</h3>
+    <p>Probably not - even though I personally believe that there has been a steady upwards trend in the quality of new releases
+    (although my personal view is that it reached a plateau in circa 2011/2). The much higher average rating you can see for
+    games that are only 2-3 years old is amplified, if not entirely due, by at least 3 things. The first is that it obviously 
+    takes time for games to get enough ratings to be included on this page, and word-of-mouth soon ensures that it is the "best" 
+    games of last year or the year before which get high numbers of ratings first - while mediocre games, unless released in a 
+    blaze of publicity and quickly found to be disappointing, tend to take a few years to get enough ratings to appear here and 
+    drag that year's average down.</p>
+    <p>Another factor is of course BGG's ubiquitous "cult of the new", which makes a high percentage of the user base seek
+    out the most-hyped new games, and soon declare them to be the best thing ever. (Similar patterns exist in every part of
+    the entertainment industry, of course.) And in general, as games get more and more talked about as being the hot new thing,
+    and attract more and more players, the average rating can't help but drop, simply because no matter how great a game may be,
+    it can't possibly sustain an average rating of 9+ as more people get to play it, including those who would never have been
+    attracted to that particular game were it not for the high ratings, and soon find that, no matter how great it may seem to
+    fans of that genre, it's just not their type of game.</p>
+    <p>And that brings me neatly to the third reason - the fact that audiences for a particular game tend to be self-selecting - 
+    because no-one goes out of their way to play games that they can easily see they won't like. (This is the main reason why 
+    wargames tend to enjoy a high average rating - they are a separate enclave which is large removed from the mainstream of
+    the hobby.) Although this phenomenon effects older games just as much as new ones, I think it is more pronounced for new 
+    games, for the simple reason that gamers may seek games "outside their comfort zone" if they have still have a high
+    reputation after several years, but are unlikely to do so for something brand new.</p>
+    <h3>So what you're basically saying is that any trends in this data should be taken with a grain of salt?</h3>
+    <p>Not any more than should be done with any dataset. This dashboard is mainly provided for entertainment rather than
+    serious study - but it is nonetheless based on real data, and I hope it will help users to see underlying trends. But
+    just because a trend exists doesn't mean that the explanation for it is always the obvious one. I'm sure there is a phrase
+    about lies and statistics just waiting to be quoted here :)</p>
+    <p>In other words - have fun exploring the data, but don't jump to any conclusions.</p>
+{% endblock %}

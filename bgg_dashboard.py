@@ -14,7 +14,21 @@ def index():
     """
     A Flask view to serve the main dashboard page.
     """
-    return render_template("index.html")
+    return render_template("dashboard.html")
+
+@app.route("/dashboard")
+def dashboard():
+    """
+    The same view, reached from an internal link.
+    """
+    return render_template("dashboard.html")
+
+@app.route("/faq")
+def faq():
+    """
+    A Flask view to serve the FAQ page.
+    """
+    return render_template("faq.html")
 
 @app.route("/BGG/game_info")
 def game_data():
