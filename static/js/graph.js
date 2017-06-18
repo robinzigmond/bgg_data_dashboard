@@ -200,7 +200,7 @@ function makeGraphs(error, game_infoJson) {
      * Year Published Chart:
      */
     var yearDim = games.dimension(function(d) {
-        return d["yearpublished"];
+        return +d["yearpublished"];
     });
 
     var yearGroupedDim = games.dimension(function(d) {
@@ -259,6 +259,7 @@ function makeGraphs(error, game_infoJson) {
         .height(600)
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
+        .colors(d3.scale.category20b())
         .transitionDuration(1000)
         .elasticX(true)
         .xAxis().ticks(4);
@@ -279,6 +280,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(mechanicsDim)
         .group(numGamesByMechanic)
+        .colors(d3.scale.category20b())
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -301,6 +303,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(categoriesDim)
         .group(numGamesByCategory)
+        .colors(d3.scale.category20b())
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -323,6 +326,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(designersDim)
         .group(gamesByDesigner)
+        .colors(d3.scale.category20b())
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -345,6 +349,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(publishersDim)
         .group(gamesByPublisher)
+        .colors(d3.scale.category20b())
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -386,12 +391,17 @@ function makeGraphs(error, game_infoJson) {
 
     var table = dc.dataTable("#table");
 
-    table
-        .dimension(ratingsDim)
-        .group(function(d) {
+    var tableDim = ratingsDim;
+    var tableGroup = function(d) {
             var ratingRoundedDown = Math.floor(d["stats"]["average"]);
             return ratingRoundedDown + "-" + (ratingRoundedDown+1);
-        })
+                     };
+    var tableSort = function(d) {return d["stats"]["average"];};
+    var tableOrder = d3.descending;
+
+    table
+        .dimension(tableDim)
+        .group(tableGroup)
         .columns([
             {label: "Name",
              format: function(d) {return "<a href='https://boardgamegeek.com/boardgame/"
@@ -408,22 +418,10 @@ function makeGraphs(error, game_infoJson) {
              format: function(d) {return d["stats"]["average"];}},
 
             {label: "Number of Ratings",
-             format: function(d) {return d["stats"]["usersrated"];}}/*,
-
-            {label: "Minimum # of Players",
-             format: function(d) {return d["minplayers"];}},
-
-            {label: "Maximum # of Players",
-             format: function(d) {return d["maxplayers"];}},
-
-            {label: "Minimum playtime (minutes)",
-             format: function(d) {return d["minplaytime"];}},
-
-            {label: "Maximum playtime (minutes)",
-             format: function(d) {return d["maxplaytime"];}}*/
+             format: function(d) {return d["stats"]["usersrated"];}},
         ])
-        .sortBy(function(d) {return d["stats"]["average"]})
-        .order(d3.descending)
+        .sortBy(tableSort)
+        .order(tableOrder)
         .size(Infinity)
         .transitionDuration(1000);
 
@@ -459,18 +457,21 @@ function makeGraphs(error, game_infoJson) {
           offset = 1;
           update();
           table.redraw();
+          makeTableHeaders();
       }
       
       next = function() {
           offset += pageSize;
           update();
           table.redraw();
+          makeTableHeaders();
       }
       
       prev = function() {
           offset -= pageSize;
           update();
           table.redraw();
+          makeTableHeaders();
       }
 
       last = function() {
@@ -478,6 +479,71 @@ function makeGraphs(error, game_infoJson) {
                    (ratingsDim.top(Infinity).length/pageSize % 1 ? 0 : pageSize);
           update();
           table.redraw();
+          makeTableHeaders();
+      }
+
+      makeTableHeaders = function() {
+          var yearHeader = document.querySelectorAll(".dc-table-head")[1];
+          yearHeader.classList.add("ordering");
+          yearHeader.addEventListener("click", sortByYear);
+          var ratingHeader = document.querySelectorAll(".dc-table-head")[2];
+          ratingHeader.classList.add("ordering");
+          ratingHeader.addEventListener("click", sortByRating);
+          var numRatingsHeader = document.querySelectorAll(".dc-table-head")[3];
+          numRatingsHeader.classList.add("ordering");
+          numRatingsHeader.addEventListener("click", sortByNumRatings);
+      }
+
+      sortByYear = function() {
+          tableDim = yearDim;
+          tableGroup = function(d) {return d["yearpublished"];};
+          tableSort = function(d) {return +d["yearpublished"];};
+          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          table.dimension(tableDim)
+               .group(tableGroup)
+               .sortBy(tableSort)
+               .order(tableOrder)
+               .redraw();
+          makeTableHeaders();
+      }
+
+      sortByRating = function() {
+          tableDim = ratingsDim;
+          tableGroup = function(d) {
+            var ratingRoundedDown = Math.floor(d["stats"]["average"]);
+            return ratingRoundedDown + "-" + (ratingRoundedDown+1);
+                       };
+          tableSort = function(d) {return d["stats"]["average"];};
+          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          table.dimension(tableDim)
+               .group(tableGroup)
+               .sortBy(tableSort)
+               .order(tableOrder)
+               .redraw();
+          makeTableHeaders();
+      }
+
+      sortByNumRatings = function() {
+          tableDim = games.dimension(function(d) {
+              return d["stats"]["usersrated"];
+          });
+          tableGroup = function(d) {
+              var lowerBound = 50;
+              possibleMins.forEach(function(elt) {
+                  if (elt <= d["stats"]["usersrated"]) {
+                      lowerBound = elt;
+                  }
+              });
+              return lowerBound + "+";
+          };
+          tableSort = function(d) {return d["stats"]["usersrated"];};
+          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          table.dimension(tableDim)
+               .group(tableGroup)
+               .sortBy(tableSort)
+               .order(tableOrder)
+               .redraw();
+          makeTableHeaders();
       }
 
       clearMechanics = function() {
@@ -502,4 +568,5 @@ function makeGraphs(error, game_infoJson) {
 
     update();
     dc.renderAll();
+    makeTableHeaders();
 }

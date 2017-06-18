@@ -2,22 +2,22 @@
 {% block content %}
     <div class="flex-row" id="select" onclick="first()">
         <!-- select by "type" (strategy game, wargame, family game etc.) -->
-        <div>
+        <div class="selector">
             <h5>Select game type:</h5>
             <div id="type-select"></div>
         </div>
         <!-- select by player count -->
-        <div>
+        <div class="selector">
             <h5>Select number of players supported:</h5>
             <div id="player-count-select"></div>
         </div>
         <!-- select by playtime -->
-        <div>
+        <div class="selector">
             <h5>Select possible playtime (minutes):</h5>
             <div id="playtime-select"></div>
         </div>
         <!-- select minimum number of ratings in games seen -->
-        <div>
+        <div class="selector">
             <h5>Select minimum number of ratings:</h5>
             <div id="min-ratings-select"></div>
         </div>
@@ -42,7 +42,7 @@
     <div class="flex-row">
         <div id="main-charts" class="flex-row"  onclick="first()">
             <!-- bar graph for year published  -->
-            <div class="flex-column chart-box large-screen">
+            <div class="flex-column large-screen">
                 <h4>Year published/released:</h4>
                 <div id="year-bar-chart"></div>
             </div>
@@ -86,6 +86,7 @@
             </div>
             <!-- data table of top-rated games among the selection -->
             <h4>List of games in current selection:</h4>
+            <p>(Click column headers to change ordering)</p>
             <table id="table"></table>
             <div id="paging">
                 Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>

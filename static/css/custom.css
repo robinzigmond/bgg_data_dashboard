@@ -66,6 +66,10 @@ button[disabled] {
     justify-content: flex-start;
 }
 
+.selector {
+    margin-right: 5px;
+}
+
 .flex-column {
     display: flex;
     flex-flow: column nowrap;
@@ -81,15 +85,16 @@ button[disabled] {
     flex: 1;
 }
 
-/* .chart-box {
-    flex-shrink: 0;
+/* .flex-row>.flex-column {
+    min-width: 450px;
+    flex: 1 0 450px;
 } */
 
 /* #main-charts .dc-chart {
     flex: 1 0 400px;
 } */
 
-#main-charts .dc-chart:before, #main-charts .dc-chart:after {
+.flex-row .flex-column:before, .flex-row .flex-column:after {
     display: flex;
     flex-wrap: wrap;
 }
@@ -121,6 +126,19 @@ button[disabled] {
 .num-display .number-display {
     font-size: 20px;
     font-weight: bold;
+}
+
+.ordering {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.ordering:hover {
+    color: #b0c4de;
+}
+
+.dc-table-column ._1, dc.table-column ._2, dc.table-column ._3 {
+    text-align: center;
 }
 
 /* .chart-box {
