@@ -280,7 +280,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(mechanicsDim)
         .group(numGamesByMechanic)
-        .ordinalColors(["#91261e"])
+        .ordinalColors(["#1f77b4"])
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -303,7 +303,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(categoriesDim)
         .group(numGamesByCategory)
-        .ordinalColors(["#91261e"])
+        .ordinalColors(["#1f77b4"])
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -326,7 +326,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(designersDim)
         .group(gamesByDesigner)
-        .ordinalColors(["#91261e"])
+        .ordinalColors(["#1f77b4"])
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -349,7 +349,7 @@ function makeGraphs(error, game_infoJson) {
         .height(250)
         .dimension(publishersDim)
         .group(gamesByPublisher)
-        .ordinalColors(["#91261e"])
+        .ordinalColors(["#1f77b4"])
         .transitionDuration(1000)
         .rowsCap(10)
         .othersGrouper(false)
@@ -494,11 +494,17 @@ function makeGraphs(error, game_infoJson) {
           numRatingsHeader.addEventListener("click", sortByNumRatings);
       }
 
+      var yearSort = function(d) {return +d["yearpublished"];};
       sortByYear = function() {
           tableDim = yearDim;
           tableGroup = function(d) {return d["yearpublished"];};
-          tableSort = function(d) {return +d["yearpublished"];};
-          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          if (tableSort == yearSort) {
+              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          }
+          else {
+            tableSort = yearSort;
+            tableOrder = d3.descending;
+          }
           table.dimension(tableDim)
                .group(tableGroup)
                .sortBy(tableSort)
@@ -507,14 +513,20 @@ function makeGraphs(error, game_infoJson) {
           makeTableHeaders();
       }
 
+      var ratingSort = function(d) {return d["stats"]["average"];};
       sortByRating = function() {
           tableDim = ratingsDim;
           tableGroup = function(d) {
             var ratingRoundedDown = Math.floor(d["stats"]["average"]);
             return ratingRoundedDown + "-" + (ratingRoundedDown+1);
-                       };
-          tableSort = function(d) {return d["stats"]["average"];};
-          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          };
+          if (tableSort == ratingSort) {
+              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          }
+          else {
+            tableSort = ratingSort;
+            tableOrder = d3.descending;
+          }
           table.dimension(tableDim)
                .group(tableGroup)
                .sortBy(tableSort)
@@ -523,21 +535,31 @@ function makeGraphs(error, game_infoJson) {
           makeTableHeaders();
       }
 
+      var numRatingsSort = function(d) {return d["stats"]["usersrated"];};
       sortByNumRatings = function() {
           tableDim = games.dimension(function(d) {
               return d["stats"]["usersrated"];
           });
           tableGroup = function(d) {
-              var lowerBound = 50;
+              var lowerBound;
               possibleMins.forEach(function(elt) {
                   if (elt <= d["stats"]["usersrated"]) {
                       lowerBound = elt;
                   }
               });
-              return lowerBound + "+";
+              if (lowerBound) {
+                  return lowerBound + "+";
+              } else {
+                  return "<100";
+              }
           };
-          tableSort = function(d) {return d["stats"]["usersrated"];};
-          tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          if (tableSort == numRatingsSort) {
+              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+          }
+          else {
+            tableSort = numRatingsSort;
+            tableOrder = d3.descending;
+          }
           table.dimension(tableDim)
                .group(tableGroup)
                .sortBy(tableSort)
