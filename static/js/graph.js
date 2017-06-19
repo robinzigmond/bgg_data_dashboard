@@ -83,7 +83,7 @@ function makeGraphs(error, game_infoJson) {
                 playTimes.push(time);
             }
         }
-        return playTimes;  // at the moment it seems that playTimes always stays as the empty array. I cannot work out why!
+        return playTimes;
     }, true);
 
     var gamesByPlayTime = playTimeDim.group();
@@ -395,13 +395,14 @@ function makeGraphs(error, game_infoJson) {
     var tableGroup = function(d) {
             var ratingRoundedDown = Math.floor(d["stats"]["average"]);
             return ratingRoundedDown + "-" + (ratingRoundedDown+1);
-                     };
+    };
     var tableSort = function(d) {return d["stats"]["average"];};
     var tableOrder = d3.descending;
 
     table
         .dimension(tableDim)
         .group(tableGroup)
+        .showGroups(false)
         .columns([
             {label: "Name",
              format: function(d) {return "<a href='https://boardgamegeek.com/boardgame/"
@@ -415,15 +416,15 @@ function makeGraphs(error, game_infoJson) {
                 }}},
 
             {label: "Average Rating",
-             format: function(d) {return d["stats"]["average"];}},
+             format: function(d) {return Math.round(100*d["stats"]["average"])/100;}},
+             // round to 2 decimal places
 
             {label: "Number of Ratings",
              format: function(d) {return d["stats"]["usersrated"];}},
         ])
         .sortBy(tableSort)
         .order(tableOrder)
-        .size(Infinity)
-        .transitionDuration(1000);
+        .size(Infinity);
 
       // implement table pagination, following the example in the dc docs
       var offset = 1, pageSize = 15;
@@ -510,16 +511,13 @@ function makeGraphs(error, game_infoJson) {
                .sortBy(tableSort)
                .order(tableOrder)
                .redraw();
-          makeTableHeaders();
+          first();
       }
 
       var ratingSort = function(d) {return d["stats"]["average"];};
       sortByRating = function() {
           tableDim = ratingsDim;
-          tableGroup = function(d) {
-            var ratingRoundedDown = Math.floor(d["stats"]["average"]);
-            return ratingRoundedDown + "-" + (ratingRoundedDown+1);
-          };
+          tableGroup = function(d) {return d["stats"]["average"];};
           if (tableSort == ratingSort) {
               tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
           }
@@ -532,7 +530,7 @@ function makeGraphs(error, game_infoJson) {
                .sortBy(tableSort)
                .order(tableOrder)
                .redraw();
-          makeTableHeaders();
+          first();
       }
 
       var numRatingsSort = function(d) {return d["stats"]["usersrated"];};
@@ -540,19 +538,7 @@ function makeGraphs(error, game_infoJson) {
           tableDim = games.dimension(function(d) {
               return d["stats"]["usersrated"];
           });
-          tableGroup = function(d) {
-              var lowerBound;
-              possibleMins.forEach(function(elt) {
-                  if (elt <= d["stats"]["usersrated"]) {
-                      lowerBound = elt;
-                  }
-              });
-              if (lowerBound) {
-                  return lowerBound + "+";
-              } else {
-                  return "<100";
-              }
-          };
+          tableGroup = function(d) {return d["stats"]["usersrated"];};
           if (tableSort == numRatingsSort) {
               tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
           }
@@ -565,7 +551,7 @@ function makeGraphs(error, game_infoJson) {
                .sortBy(tableSort)
                .order(tableOrder)
                .redraw();
-          makeTableHeaders();
+          first();
       }
 
       clearMechanics = function() {
@@ -590,5 +576,5 @@ function makeGraphs(error, game_infoJson) {
 
     update();
     dc.renderAll();
-    makeTableHeaders();
+    first();
 }

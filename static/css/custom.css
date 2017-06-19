@@ -9,10 +9,6 @@ body, button { /* need to override default browser button styling */
     font-family: 'Overpass', sans-serif;
 }
 
-button[disabled=true] {
-    color: #444;
-}
-
 nav {
     background-color: #91261e;
     width: 100%;
@@ -59,13 +55,15 @@ a:hover, a:active {
 
 button {
     cursor: pointer;
-    background-color: #d4372b;
+    background-color: #91261e;
     border: 1px outset #aaa;
     border-radius: 2px;
 }
 
 button[disabled] {
     cursor: auto;
+    color: #444;
+    border-color: #444;
 }
 
 .flex-row {
@@ -153,7 +151,7 @@ button[disabled] {
     color: #b0c4de;
 }
 
-.dc-table-column._1, dc.table-column._2, dc.table-column._3 {
+.dc-table-column._1, .dc-table-column._2, .dc-table-column._3 {
     text-align: center;
 }
 
