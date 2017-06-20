@@ -393,10 +393,10 @@ function makeGraphs(error, game_infoJson) {
 
     var tableDim = ratingsDim;
     var tableGroup = function(d) {
-            var ratingRoundedDown = Math.floor(d["stats"]["average"]);
-            return ratingRoundedDown + "-" + (ratingRoundedDown+1);
+            return d["stats"]["average"];
     };
-    var tableSort = function(d) {return d["stats"]["average"];};
+    var ratingSort = function(d) {return d["stats"]["average"];};
+    var tableSort = ratingSort;
     var tableOrder = d3.descending;
 
     table
@@ -416,7 +416,7 @@ function makeGraphs(error, game_infoJson) {
                 }}},
 
             {label: "Average Rating",
-             format: function(d) {return Math.round(100*d["stats"]["average"])/100;}},
+             format: function(d) {return d["stats"]["average"].toFixed(2);}},
              // round to 2 decimal places
 
             {label: "Number of Ratings",
@@ -514,7 +514,6 @@ function makeGraphs(error, game_infoJson) {
           first();
       }
 
-      var ratingSort = function(d) {return d["stats"]["average"];};
       sortByRating = function() {
           tableDim = ratingsDim;
           tableGroup = function(d) {return d["stats"]["average"];};
@@ -533,12 +532,12 @@ function makeGraphs(error, game_infoJson) {
           first();
       }
 
-      var numRatingsSort = function(d) {return d["stats"]["usersrated"];};
+      
+      var numRatingsSort = function(d) {return +d["stats"]["usersrated"];};
+      var numRatingsDim = games.dimension(function(d) {return +d["stats"]["usersrated"];});
       sortByNumRatings = function() {
-          tableDim = games.dimension(function(d) {
-              return d["stats"]["usersrated"];
-          });
-          tableGroup = function(d) {return d["stats"]["usersrated"];};
+          tableDim = numRatingsDim;
+          tableGroup = function(d) {return +d["stats"]["usersrated"];};
           if (tableSort == numRatingsSort) {
               tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
           }
@@ -577,4 +576,12 @@ function makeGraphs(error, game_infoJson) {
     update();
     dc.renderAll();
     first();
+
+    // latest attempt to keep the 2 year charts "in sync", but still can't get it to work
+    /* var updateCharts = function() {
+        yearChart.filter([[]]).redraw();
+        yearChartAlt.filter([[]]).redraw();
+    }
+    window.addEventListener("orientationchange", updateCharts);
+    window.addEventListener("resize", updateCharts); */
 }
