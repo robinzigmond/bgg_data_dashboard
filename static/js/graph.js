@@ -577,11 +577,90 @@ function makeGraphs(error, game_infoJson) {
     dc.renderAll();
     first();
 
-    // latest attempt to keep the 2 year charts "in sync", but still can't get it to work
-    /* var updateCharts = function() {
-        yearChart.filter([[]]).redraw();
-        yearChartAlt.filter([[]]).redraw();
+    // code to update visual display of the 2 year charts (bar chart and row chart) so that one changes
+    // when a selection is made on the other. This is done because on some tablets it is possible to rotate
+    // the screen so that one disappears and the other appears - to maintain the illusion that they are
+    // "the same" chart, they need to be kept "in sync".
+    var barColumns = document.querySelectorAll("#year-bar-chart rect.bar");
+    var rowRows = document.querySelectorAll("#year-row-chart g.row rect");
+    var numColumns = barColumns.length;
+
+    var updateBarToRow = function() {
+        for (var i=0; i<numColumns; i++) {
+            var longTitle = barColumns[i].firstElementChild.textContent;
+            var title = longTitle.slice(0, longTitle.indexOf(":"));
+            var isMatchingRow = function(row) {
+                return (row.nextElementSibling.textContent == title);
+            }
+            var selected = barColumns[i].classList.contains("selected");
+            var deselected = barColumns[i].classList.contains("deselected");
+            if (selected) {
+                rowRows.forEach(function(row) {
+                    if (isMatchingRow(row)) {
+                        row.classList.remove("deselected");
+                        row.classList.add("selected");
+                    }
+                });
+            } else if (deselected) {
+                rowRows.forEach(function(row) {
+                    if (isMatchingRow(row)) {
+                        row.classList.remove("selected");
+                        row.classList.add("deselected");
+                    }
+                });
+            }
+            else {
+                rowRows.forEach(function(row) {
+                    if (isMatchingRow(row)) {
+                        row.classList.remove("selected");
+                        row.classList.remove("deselected");
+                    }
+                });
+            }
+        }
     }
-    window.addEventListener("orientationchange", updateCharts);
-    window.addEventListener("resize", updateCharts); */
+
+    var updateRowToBar = function() {
+        for (var i=0; i<numColumns; i++) {
+            var title = rowRows[i].nextElementSibling.textContent;
+            var isMatchingColumn = function(column) {
+                return (column.firstElementChild.textContent.indexOf(title)==0);
+            }
+            var selected = rowRows[i].classList.contains("selected");
+            var deselected = rowRows[i].classList.contains("deselected");
+            if (selected) {
+                barColumns.forEach(function(col) {
+                    if (isMatchingColumn(col)) {
+                        col.classList.remove("deselected");
+                        col.classList.add("selected");
+                    }
+                });
+            } else if (deselected) {
+                barColumns.forEach(function(col) {
+                    if (isMatchingColumn(col)) {
+                        col.classList.remove("selected");
+                        col.classList.add("deselected");
+                    }
+                });
+            }
+            else {
+                barColumns.forEach(function(col) {
+                    if (isMatchingColumn(col)) {
+                        col.classList.remove("selected");
+                        col.classList.remove("deselected");
+                    }
+                });
+            }
+        }
+    }
+
+    var syncCharts = function() {
+        // do each update twice to ensure stablity and avoidance of "race conditions"
+        for (var i=0; i<2; i++) {
+            updateBarToRow();
+            updateRowToBar();
+        }
+    }
+    window.addEventListener("resize", syncCharts);
+    window.addEventListener("orientationchange", syncCharts);
 }
