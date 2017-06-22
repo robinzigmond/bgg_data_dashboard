@@ -577,90 +577,41 @@ function makeGraphs(error, game_infoJson) {
     dc.renderAll();
     first();
 
-    // code to update visual display of the 2 year charts (bar chart and row chart) so that one changes
-    // when a selection is made on the other. This is done because on some tablets it is possible to rotate
-    // the screen so that one disappears and the other appears - to maintain the illusion that they are
-    // "the same" chart, they need to be kept "in sync".
-    var barColumns = document.querySelectorAll("#year-bar-chart rect.bar");
-    var rowRows = document.querySelectorAll("#year-row-chart g.row rect");
-    var numColumns = barColumns.length;
+    /* the following code ensures that the row chart and bar chart for the Year Published information - the
+    two versions of the same chart, only one of which is ever displayed depending on screen size - always stay
+    "in sync", so that the user on a tablet can keep on making selections and rotating the screen in arbitrary
+    combinations and keep seeing what they would expect, as if there was just one chart whose display was being
+    altered. It is done by passing all the filters applied to one chart to the other, when the screen is rotated
+    or the window resized.
 
-    var updateBarToRow = function() {
-        for (var i=0; i<numColumns; i++) {
-            var longTitle = barColumns[i].firstElementChild.textContent;
-            var title = longTitle.slice(0, longTitle.indexOf(":"));
-            var isMatchingRow = function(row) {
-                return (row.nextElementSibling.textContent == title);
-            }
-            var selected = barColumns[i].classList.contains("selected");
-            var deselected = barColumns[i].classList.contains("deselected");
-            if (selected) {
-                rowRows.forEach(function(row) {
-                    if (isMatchingRow(row)) {
-                        row.classList.remove("deselected");
-                        row.classList.add("selected");
-                    }
-                });
-            } else if (deselected) {
-                rowRows.forEach(function(row) {
-                    if (isMatchingRow(row)) {
-                        row.classList.remove("selected");
-                        row.classList.add("deselected");
-                    }
-                });
-            }
-            else {
-                rowRows.forEach(function(row) {
-                    if (isMatchingRow(row)) {
-                        row.classList.remove("selected");
-                        row.classList.remove("deselected");
-                    }
-                });
-            }
-        }
-    }
+    This may work if the function syncCharts function is applied on each click of the relevant chart - but I
+    have not tried it. There is potential for it not to work as expected due to dc updating the filters at
+    the same time as the syncCharts function is trying to do so, with potentially unexpected results. */
 
-    var updateRowToBar = function() {
-        for (var i=0; i<numColumns; i++) {
-            var title = rowRows[i].nextElementSibling.textContent;
-            var isMatchingColumn = function(column) {
-                return (column.firstElementChild.textContent.indexOf(title)==0);
-            }
-            var selected = rowRows[i].classList.contains("selected");
-            var deselected = rowRows[i].classList.contains("deselected");
-            if (selected) {
-                barColumns.forEach(function(col) {
-                    if (isMatchingColumn(col)) {
-                        col.classList.remove("deselected");
-                        col.classList.add("selected");
-                    }
-                });
-            } else if (deselected) {
-                barColumns.forEach(function(col) {
-                    if (isMatchingColumn(col)) {
-                        col.classList.remove("selected");
-                        col.classList.add("deselected");
-                    }
-                });
-            }
-            else {
-                barColumns.forEach(function(col) {
-                    if (isMatchingColumn(col)) {
-                        col.classList.remove("selected");
-                        col.classList.remove("deselected");
-                    }
-                });
-            }
-        }
-    }
+    var lastClickedChart;
 
+    document.getElementById("year-bar-chart").addEventListener("click", function() {lastClickedChart="bar";});
+    document.getElementById("year-row-chart").addEventListener("click", function() {lastClickedChart="row";});
+    
     var syncCharts = function() {
-        // do each update twice to ensure stablity and avoidance of "race conditions"
-        for (var i=0; i<2; i++) {
-            updateBarToRow();
-            updateRowToBar();
+        if (lastClickedChart == "bar") {
+            yearChartAlt.filter(null);
+            var filters = yearChart.filters();
+             for (var i=0; i<filters.length; i++) {
+                yearChartAlt.filter(filters[i]);
+            }
+            yearChartAlt.redraw();
+        }
+        else if (lastClickedChart =="row") {
+            yearChart.filter(null);
+            var filters = yearChartAlt.filters();
+             for (var i=0; i<filters.length; i++) {
+                yearChart.filter(filters[i]);
+            }
+            yearChart.redraw();
         }
     }
+
     window.addEventListener("resize", syncCharts);
     window.addEventListener("orientationchange", syncCharts);
 }
