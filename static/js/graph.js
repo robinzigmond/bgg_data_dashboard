@@ -434,152 +434,159 @@ function makeGraphs(error, game_infoJson) {
         .order(tableOrder)
         .size(Infinity);
 
-      // implement table pagination, following the example in the dc docs
-      var offset = 1, pageSize = 15;
+    // implement table pagination, following the example in the dc docs
+    var offset = 1, pageSize = 15;
       
-      function display() {
-          d3.select("#begin")
-            .text(offset);
-          d3.select("#end")
-            .text(Math.min(offset + pageSize - 1, ratingsDim.top(Infinity).length));
-          d3.select("#prev")
-            .attr("disabled", offset-pageSize<0 ? "true" : null);
-          d3.select("#next")
-            .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
-          d3.select("#size").text(ratingsDim.top(Infinity).length);
-          d3.select("#first")
-            .attr("disabled", offset==1 ? "true" : null);
-          d3.select("#last")
-            .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
-      }
+    function display() {
+        d3.select("#begin")
+          .text(offset);
+        d3.select("#end")
+          .text(Math.min(offset + pageSize - 1, ratingsDim.top(Infinity).length));
+        d3.select("#prev")
+          .attr("disabled", offset-pageSize<0 ? "true" : null);
+        d3.select("#next")
+          .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
+        d3.select("#size").text(ratingsDim.top(Infinity).length);
+        d3.select("#first")
+          .attr("disabled", offset==1 ? "true" : null);
+        d3.select("#last")
+          .attr("disabled", offset+pageSize-1>=(ratingsDim.top(Infinity).length) ? "true" : null);
+    }
       
-      // these functions are deliberately defined as global variables,
-      // so that they can be called by onlick attributes in the html
+    // these functions are deliberately defined as global variables,
+    // so that they can be called by onlick attributes in the html
    
-      update = function() {
-          table.beginSlice(offset-1);
-          table.endSlice(offset+pageSize-1);
-          display();
-      }
+    update = function() {
+        table.beginSlice(offset-1);
+        table.endSlice(offset+pageSize-1);
+        display();
+    }
 
-      first = function() {
-          offset = 1;
-          update();
-          table.redraw();
-          makeTableHeaders();
-      }
+    first = function() {
+        offset = 1;
+        update();
+        table.redraw();
+        makeTableHeaders();
+    }
       
-      next = function() {
-          offset += pageSize;
-          update();
-          table.redraw();
-          makeTableHeaders();
-      }
+    next = function() {
+        offset += pageSize;
+        update();
+        table.redraw();
+        makeTableHeaders();
+    }
       
-      prev = function() {
-          offset -= pageSize;
-          update();
-          table.redraw();
-          makeTableHeaders();
-      }
+    prev = function() {
+        offset -= pageSize;
+        update();
+        table.redraw();
+        makeTableHeaders();
+    }
 
-      last = function() {
-          offset = Math.floor(ratingsDim.top(Infinity).length/pageSize)*pageSize + 1 - 
-                   (ratingsDim.top(Infinity).length/pageSize % 1 ? 0 : pageSize);
-          update();
-          table.redraw();
-          makeTableHeaders();
-      }
+    last = function() {
+        offset = Math.floor(ratingsDim.top(Infinity).length/pageSize)*pageSize + 1 - 
+                 (ratingsDim.top(Infinity).length/pageSize % 1 ? 0 : pageSize);
+        update();
+        table.redraw();
+        makeTableHeaders();
+    }
 
-      makeTableHeaders = function() {
-          var yearHeader = document.querySelectorAll(".dc-table-head")[1];
-          yearHeader.classList.add("ordering");
-          yearHeader.addEventListener("click", sortByYear);
-          var ratingHeader = document.querySelectorAll(".dc-table-head")[2];
-          ratingHeader.classList.add("ordering");
-          ratingHeader.addEventListener("click", sortByRating);
-          var numRatingsHeader = document.querySelectorAll(".dc-table-head")[3];
-          numRatingsHeader.classList.add("ordering");
-          numRatingsHeader.addEventListener("click", sortByNumRatings);
-      }
+    makeTableHeaders = function() {
+        var yearHeader = document.querySelectorAll(".dc-table-head")[1];
+        yearHeader.classList.add("ordering");
+        yearHeader.addEventListener("click", sortByYear);
+        var ratingHeader = document.querySelectorAll(".dc-table-head")[2];
+        ratingHeader.classList.add("ordering");
+        ratingHeader.addEventListener("click", sortByRating);
+        var numRatingsHeader = document.querySelectorAll(".dc-table-head")[3];
+        numRatingsHeader.classList.add("ordering");
+        numRatingsHeader.addEventListener("click", sortByNumRatings);
+    }
 
-      var yearSort = function(d) {return +d["yearpublished"];};
-      sortByYear = function() {
-          tableDim = yearDim;
-          tableGroup = function(d) {return d["yearpublished"];};
-          if (tableSort == yearSort) {
-              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
-          }
-          else {
-            tableSort = yearSort;
-            tableOrder = numDescending;
-          }
-          table.dimension(tableDim)
-               .group(tableGroup)
-               .sortBy(tableSort)
-               .order(tableOrder)
-               .redraw();
-          first();
-      }
+    var yearSort = function(d) {return +d["yearpublished"]};
+    sortByYear = function() {
+        tableDim = yearDim;
+        tableGroup = function(d) {
+            if (!d["yearpublished"]) {
+                return (-100000); /* arbitrarily large negative number to ensure "not given" occurs
+                after all games with a given year. NB I tried -Infinity but it didn't work. */
+            } else {
+                return +d["yearpublished"];
+            }
+        };
+        if (tableSort == yearSort) {
+            tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
+        }
+        else {
+          tableSort = yearSort;
+          tableOrder = numDescending;
+        }
+        table.dimension(tableDim)
+             .group(tableGroup)
+             .sortBy(tableSort)
+             .order(tableOrder)
+             .redraw();
+        first();
+    }
 
-      sortByRating = function() {
-          tableDim = ratingsDim;
-          tableGroup = function(d) {return d["stats"]["average"];};
-          if (tableSort == ratingSort) {
-              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
-          }
-          else {
-            tableSort = ratingSort;
-            tableOrder = numDescending;
-          }
-          table.dimension(tableDim)
-               .group(tableGroup)
-               .sortBy(tableSort)
-               .order(tableOrder)
-               .redraw();
-          first();
-      }
+    sortByRating = function() {
+        tableDim = ratingsDim;
+        tableGroup = function(d) {return d["stats"]["average"];};
+        if (tableSort == ratingSort) {
+            tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
+        }
+        else {
+          tableSort = ratingSort;
+          tableOrder = numDescending;
+        }
+        table.dimension(tableDim)
+             .group(tableGroup)
+             .sortBy(tableSort)
+             .order(tableOrder)
+             .redraw();
+        first();
+    }
 
       
-      var numRatingsSort = function(d) {return +d["stats"]["usersrated"];};
-      var numRatingsDim = games.dimension(function(d) {return +d["stats"]["usersrated"];});
-      sortByNumRatings = function() {
-          tableDim = numRatingsDim;
-          tableGroup = function(d) {return +d["stats"]["usersrated"];};
-          if (tableSort == numRatingsSort) {
-              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
-          }
-          else {
-            tableSort = numRatingsSort;
-            tableOrder = numDescending;
-          }
-          table.dimension(tableDim)
-               .group(tableGroup)
-               .sortBy(tableSort)
-               .order(tableOrder)
-               .redraw();
-          first();
-      }
+    var numRatingsSort = function(d) {return +d["stats"]["usersrated"];};
+    var numRatingsDim = games.dimension(function(d) {return +d["stats"]["usersrated"];});
+    sortByNumRatings = function() {
+        tableDim = numRatingsDim;
+        tableGroup = function(d) {return +d["stats"]["usersrated"];};
+        if (tableSort == numRatingsSort) {
+            tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
+        }
+        else {
+          tableSort = numRatingsSort;
+          tableOrder = numDescending;
+        }
+        table.dimension(tableDim)
+             .group(tableGroup)
+             .sortBy(tableSort)
+             .order(tableOrder)
+             .redraw();
+        first();
+    }
 
-      clearMechanics = function() {
-          mechanicsChart.filter(null);
-          dc.redrawAll();
-      }
+    clearMechanics = function() {
+        mechanicsChart.filter(null);
+        dc.redrawAll();
+    }
 
-      clearCategories = function() {
-          categoriesChart.filter(null);
-          dc.redrawAll();
-      }
+    clearCategories = function() {
+        categoriesChart.filter(null);
+        dc.redrawAll();
+    }
 
-      clearDesigners = function() {
-          designersChart.filter(null);
-          dc.redrawAll();
-      }
+    clearDesigners = function() {
+        designersChart.filter(null);
+        dc.redrawAll();
+    }
 
-      clearPublishers = function() {
-          publishersChart.filter(null);
-          dc.redrawAll();
-      }
+    clearPublishers = function() {
+        publishersChart.filter(null);
+        dc.redrawAll();
+    }
 
     update();
     dc.renderAll();
