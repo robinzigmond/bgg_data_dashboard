@@ -6814,11 +6814,7 @@ dc.dataTable = function (parent, chartGroup) {
 
         return d3.nest()
             .key(_chart.group())
-            // the following line bas been altered by RZ (BGG dashboard author)
-            // in order to allow the ordering to function correctly with numerical
-            // keys (d3.nest converts all values into strings, so this is necessary)
-            // to get the desired order
-            .sortKeys(function(a, b) { return _order(+a, +b);})
+            .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
             }).slice(_beginSlice, _endSlice));

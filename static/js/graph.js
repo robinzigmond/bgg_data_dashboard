@@ -203,8 +203,7 @@ function makeGraphs(error, game_infoJson) {
         return +d["yearpublished"];
     });
 
-    var yearGroupedDim = games.dimension(function(d) {
-        var year = d["yearpublished"];
+    var groupYears = function(year) {
         if (!year) {
             return "not given";
         }
@@ -219,6 +218,10 @@ function makeGraphs(error, game_infoJson) {
         else {
             return String(year);
         }
+    };
+
+    var yearGroupedDim = games.dimension(function(d) {
+        return groupYears(d["yearpublished"]);
     });
 
     var numGamesByYear = yearGroupedDim.group();
@@ -259,6 +262,7 @@ function makeGraphs(error, game_infoJson) {
         .height(600)
         .dimension(yearGroupedDim)
         .group(numGamesByYear)
+        .ordering(function(d) {return yearGroups.indexOf(d.key);})
         .ordinalColors(["#1f77b4"])
         .transitionDuration(1000)
         .elasticX(true)
@@ -397,7 +401,11 @@ function makeGraphs(error, game_infoJson) {
     };
     var ratingSort = function(d) {return d["stats"]["average"];};
     var tableSort = ratingSort;
-    var tableOrder = d3.descending;
+
+    // define new ordering functions which order numerically, rather than as strings:
+    var numAscending = function(a,b) {return d3.ascending(+a, +b);};
+    var numDescending = function(a,b) {return d3.descending(+a, +b);};
+    var tableOrder = numDescending;
 
     table
         .dimension(tableDim)
@@ -500,11 +508,11 @@ function makeGraphs(error, game_infoJson) {
           tableDim = yearDim;
           tableGroup = function(d) {return d["yearpublished"];};
           if (tableSort == yearSort) {
-              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
           }
           else {
             tableSort = yearSort;
-            tableOrder = d3.descending;
+            tableOrder = numDescending;
           }
           table.dimension(tableDim)
                .group(tableGroup)
@@ -518,11 +526,11 @@ function makeGraphs(error, game_infoJson) {
           tableDim = ratingsDim;
           tableGroup = function(d) {return d["stats"]["average"];};
           if (tableSort == ratingSort) {
-              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
           }
           else {
             tableSort = ratingSort;
-            tableOrder = d3.descending;
+            tableOrder = numDescending;
           }
           table.dimension(tableDim)
                .group(tableGroup)
@@ -539,11 +547,11 @@ function makeGraphs(error, game_infoJson) {
           tableDim = numRatingsDim;
           tableGroup = function(d) {return +d["stats"]["usersrated"];};
           if (tableSort == numRatingsSort) {
-              tableOrder = (tableOrder==d3.descending ? d3.ascending : d3.descending);
+              tableOrder = (tableOrder==numDescending ? numAscending : numDescending);
           }
           else {
             tableSort = numRatingsSort;
-            tableOrder = d3.descending;
+            tableOrder = numDescending;
           }
           table.dimension(tableDim)
                .group(tableGroup)
