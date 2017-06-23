@@ -163,7 +163,7 @@ button[disabled] {
 
 /* make text disappear for rows representing zero games */
 /* doesn't work, for reasons I do not yet know!*/
-g.row rect[width=0]+text {
+g.row rect[width="0"]+text {
     display: none;
 }
 
