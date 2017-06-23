@@ -92,11 +92,11 @@ button[disabled] {
 }
 
 #main-charts {
-    flex: 2;
+    flex: 2 0 500px;
 }
 
 #ratings {
-    flex: 1;
+    flex: 1 0 300px;
 }
 
 /* .flex-row>.flex-column {
