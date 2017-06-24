@@ -4,8 +4,14 @@ import boardgamegeek
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
+MONGODB_HOST = "localhost"
+MONGODB_PORT = 27017
+DBS_NAME = "BGG"
+COLLECTION_NAME = "game_info"
+TEMP_COLLECTION_NAME = "temp"
+
 PAGES = 100  # constant for the number of pages of search results to look
-             # through. Each page consists of 100 items. 
+             # through. Each page consists of 100 items.
 
 
 def get_game_ids(sortcriterion, firstpage, pages, sortdirection="desc"):
@@ -28,8 +34,7 @@ def get_game_ids(sortcriterion, firstpage, pages, sortdirection="desc"):
         print "processing page no. %s" % pageno
         search_url = (BASEURL + "/page/" + str(pageno) + "?sort="
                       + sortcriterion + "&sortdir=" + sortdirection)
-        page = urlopen(search_url)
-        html = page.read()
+        html = urlopen(search_url).read()
         soup = BeautifulSoup(html, "lxml")
         # now search for all boardgame links in ranking list
         link_tags = soup.findAll(is_link_in_ranking_list)
@@ -73,45 +78,66 @@ def get_good_data(game):
     "language_dependence" key and corresponding value, because the value
     is itself a dictionary which contains non-string keys, which can't be
     parsed by MongoDB"""
-    data = game.data()
-    data.pop("language_dependence")
-    return data
+    stats = game.data()
+    stats.pop("language_dependence")
+    return stats
 
 
-def update_game_database(bgg_client, id_lists):
+def get_api_data(bgg_client, id_lists):
     """
-    This function takes a list of lists of game ids, pulls all the data 
-    about the corresponding games from the BGG API, then uploads them 
-    to the MongoDB running on localhost. The database is called "BGG", 
-    and the collection is called "game_info". The previous data is first 
-    cleared, so that when the program is run the database is updated with 
-    the latest BGG data, instead of adding new data to the old (which would
-    introduce many duplicates and make the database grow huge over time).
+    This function takes in a list of lists of game IDs, makes the necessary API calls, and
+    returns a list of lists of dictionaries, each dictionary containing the BGG data for
+    one game.
+    """
+    game_data = []
+    counter = 0
+    for id_list in id_lists:
+        time.sleep(10) # pause to prevent API throttling
+        counter = counter+1
+        print "trying to obtain API data for page %s of %s" % (counter, PAGES)
+        # The following API call returns a list of objects representing the games:
+        games = bgg_client.game_list(game_id_list=id_list)
+        # map over the list to get a list of dictionaries of the desired data:
+        data_dicts = map(get_good_data, games)
+        game_data.append(data_dicts)
+        if game_data == {}:
+            print "failure"
+        else:
+            print "success!"
+        
+    return game_data
+
+
+def update_game_database(game_data):
+    """
+    This very simple function uploads a list of game-data dictionaries to MongoDB.
+    It first uploads them to a new collection, and only wipes the old one and replaces it
+    if the new data is "good". (Failures can mostly be caused by issues with the BGG API.)
     """
     # create connection:
-    with MongoClient(host="localhost", port=27017) as client:
-        db = client.BGG
-        collection = db.game_info
-        # first wipe previous data
+    with MongoClient(host=MONGODB_HOST, port=MONGODB_PORT) as client:
+        db = client[DBS_NAME]
+        collection = db[TEMP_COLLECTION_NAME]
+        # first wipe any previous termporary data - this is now not needed
         collection.delete_many({})
         counter = 0
-        for list in id_lists:
-            time.sleep(10)  # pause to prevent API throttling
+        for data_dict in game_data:
             counter = counter+1
             print "trying to upload API data for page %s of %s" % (counter, PAGES)
-            # first get game data from API. The following API call returns a
-            # list of objects representing the games: 
-            games = bgg_client.game_list(game_id_list=list)
-            # for each game, the .data() method returns a dictionary of the
-            # game's data. We pack those dictionaries into a list
-            data_dict = map(get_good_data, games)
             # upload new data
             collection.insert_many(data_dict)
             print "successfully uploaded to MongoDB!"
+        # if we have succesffully reached this point with no errors, it is safe to
+        # replace the old "permanent" data with the new
+        collection.rename(COLLECTION_NAME, dropTarget=True)
 
 
-bgg = boardgamegeek.BGGClient(requests_per_minute = 10)
-id_lists = []
-for i in range (0, PAGES):
-    id_lists.append(get_game_ids("numvoters", i+1, 1))
-update_game_database(bgg, id_lists)  # upload data to Mongo
+# the main program just uses the function defined above to first get the
+# game ID lists, uses those to get the data from the BGG API, and finally
+# uploads the data to MongoDB
+bgg = boardgamegeek.BGGClient(requests_per_minute=10)
+lists = []
+for i in range(0, PAGES):
+    lists.append(get_game_ids("numvoters", i+1, 1))
+data = get_api_data(bgg, lists)
+update_game_database(data)
