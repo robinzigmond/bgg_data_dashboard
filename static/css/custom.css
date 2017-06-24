@@ -49,9 +49,14 @@ a, a:visited {
     color: #fff;
 }
 
-a:hover, a:active {
+#table a, #table a:visited {
+    color: inherit;
+}
+
+a:hover, a:active, #table a:hover, #table a:active {
     color: #b0c4de;
 }
+
 
 button {
     cursor: pointer;
@@ -98,15 +103,6 @@ button[disabled] {
 #ratings {
     flex: 1 0 300px;
 }
-
-/* .flex-row>.flex-column {
-    min-width: 450px;
-    flex: 1 0 450px;
-} */
-
-/* #main-charts .dc-chart {
-    flex: 1 0 400px;
-} */
 
 .flex-row .flex-column:before, .flex-row .flex-column:after {
     display: flex;
@@ -155,14 +151,10 @@ button[disabled] {
     text-align: center;
 }
 
-/* .chart-box {
-    box-sizing: border-box;
-    margin: 2px 0;
-    padding: 2px;
-} */
+#table tbody:nth-child(2n+1) {
+    color: #dc5f56;
+}
 
-/* make text disappear for rows representing zero games */
-/* doesn't work, for reasons I do not yet know!*/
 g.row rect[width="0"]+text {
     display: none;
 }
