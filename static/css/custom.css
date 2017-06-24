@@ -1,5 +1,5 @@
 body {
-    padding-top: 30px;
+    padding-top: 50px;
     padding-bottom: 30px;
 }
 
@@ -7,6 +7,15 @@ body, button { /* need to override default browser button styling */
     background-color: #22344b;
     color: #fff;
     font-family: 'Overpass', sans-serif;
+}
+
+.intro_button {
+    display: block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
 }
 
 nav {
@@ -75,9 +84,12 @@ button[disabled] {
 
 #select {
     margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     background-color: #4f79b0;
     border: 1px outset #37557b;
     padding-bottom: 10px;
+    padding-left: 2px;
 }
 
 .selector {

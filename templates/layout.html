@@ -7,6 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://use.fontawesome.com/1b6b7e1211.js"></script>
         <link rel="stylesheet" href="{{ url_for ('static', filename='lib/css/dc.css')}}">
+        <link rel="stylesheet" href="{{ url_for ('static', filename='lib/css/introjs.css')}}">
+        <link rel="stylesheet" href="{{ url_for ('static', filename='lib/css/introjs-nazanin.css')}}">
         <link rel="stylesheet" href="{{ url_for ('static', filename='css/custom.css')}}">
         <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Overpass" rel="stylesheet">
     </head>
@@ -15,7 +17,9 @@
             <h2 id="nav-title">Board Game Data Dashboard</h2>
             <ul id="nav-list">
                 <li class="nav-link"><a href="/dashboard">Dashboard</a></li>
-                <li class="nav-link"><a href="/faq">FAQ</a></li>
+                <li class="nav-link" data-step="19" data-intro="So have fun playing with the dashboard! If you
+                have any further questions, particularly if you notice anything strange about the data, you might
+                want to check out the FAQ page here. Enjoy!" data-position="left"><a href="/faq">FAQ</a></li>
             </ul>
         </nav>
         {% block content %}

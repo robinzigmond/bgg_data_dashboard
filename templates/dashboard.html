@@ -1,77 +1,115 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="flex-row" id="select" onclick="first()">
+    <button data-step="1" data-intro="This is a dashboard for exploring data on tabletop games,
+    gathered from the boardgamegeek website. There are many options to explore: please play around and
+    have fun!" class="intro_button" type="button" autofocus onclick="introJs().start();">
+    Show me how this works!</button>
+    <div class="flex-row" id="select" onclick="first()" data-step="2" data-intro="At any moment, you are looking
+    at data for some subset of games in the BGG database. The widest available selection is used when the page first
+    loads (see the FAQ page for details on how this selection was chosen) - then interacting with the dashboard
+    features can narrow this selection. Here there are a variety of dropdown menus to filter the data in some
+    basic ways which you may find useful. Each menu shows not only the filters you can apply, but how many games
+    will be in the filtered selection.">
         <!-- select by "type" (strategy game, wargame, family game etc.) -->
-        <div class="selector">
+        <div class="selector" data-step="3" data-intro='Here you can filter by the broad "type" or "genre" of
+        game - such as Wargame or Family Game. Notice that, as soon as you make a selection, all the charts and
+        other information below updates to reflect the new selection. You can come back here at any time to make
+        a new selection, or choose "select all" to clear all such filters.'>
             <h5>Select game type:</h5>
             <div id="type-select"></div>
         </div>
         <!-- select by player count -->
-        <div class="selector">
+        <div class="selector" data-step="4" data-intro="This selector is for a specific number of players which
+        you might be interested in accomodating.">
             <h5>Select number of players supported:</h5>
             <div id="player-count-select"></div>
         </div>
         <!-- select by playtime -->
-        <div class="selector">
+        <div class="selector" data-step="5" data-intro="This one is for the time taken to play the games -
+        that is, how many games have the stated time between the values BGG gives for their minimum and
+        maximum playtime. This shouldn't be taken too seriously, since in many cases these values don't
+        bear much resemblance to the actual playtime - but it can be interesting to play around with.">
             <h5>Select possible playtime (minutes):</h5>
             <div id="playtime-select"></div>
         </div>
         <!-- select minimum number of ratings in games seen -->
-        <div class="selector">
+        <div class="selector" data-step="6" data-intro='Here you can select the minimum number of user
+        ratings a game has to have before it is included in the selection. The data contains all games on
+        BGG with a "sufficiently high" number of ratings, and by using this menu it is possible to increase
+        the threshold to focus on more widely-known games.'>
             <h5>Select minimum number of ratings:</h5>
             <div id="min-ratings-select"></div>
         </div>
     </div>
     <div class="flex-row">
         <!-- display number of games selected -->
-        <div class="num-display">
+        <div class="num-display" data-step="7" data-intro="These number fields, unlike the rest of the
+        dashboard, cannot be interacted with - they just give a convenient display of some summary figures
+        for the current selection of games. This one simply gives the total number in that selection.">
             <h5># of games in current selection:</h5>
             <div id="num-games-ND"></div>
         </div>
         <!-- display average rating (an average of averages!) -->
-        <div class="num-display">
+        <div class="num-display" data-step="8" data-intro="This one is for the average rating. (And since each
+        individual rating is of course an average of BGG users' individual ratings, this is in fact an -
+        unweighted - average of averages!)">
             <h5>Average rating of selected games:</h5>
             <div id="avg-rating-ND"></div>
         </div>
         <!-- display average number of ratings -->
-        <div class="num-display">
+        <div class="num-display" data-step="9" data-intro="And this one tells you how many ratings the games have,
+        on average.">
             <h5>Average number of ratings for selected games:</h5>
             <div id="avg-num-ratings-ND"></div>
         </div>
     </div>
     <div class="flex-row">
         <div id="main-charts" class="flex-row"  onclick="first()">
-            <!-- bar graph for year published  -->
-            <div class="flex-column large-screen">
-                <h4>Year published/released:</h4>
-                <div id="year-bar-chart"></div>
-            </div>
-            <!-- alternative (row chart) for small-width screens -->
-            <div class="flex-column chart-box small-screen">
-                <h4>Year published/released:</h4>
-                <div id="year-row-chart"></div>
+            <div data-step="10" data-intro="We now get to the real meat of the dashboard - the charts. In all of
+            them - including this one, for the year the games were published (lumped into broader categories for
+            older games, and including a separate category for games for which BGG doesn't give this information)
+            - you can click on individual bars/rows to restrict the data to just that case. Notice how the other
+            charts all change when you do this! You can select multiple bars/rows in this way to see the data
+            for several time periods at once, and deselect them with a second click." data-position="right">
+                <!-- bar graph for year published  -->
+                <div class="flex-column large-screen">
+                    <h4>Year published/released:</h4>
+                    <div id="year-bar-chart"></div>
+                </div>
+                <!-- alternative (row chart) for small-width screens -->
+                <div class="flex-column chart-box small-screen">
+                    <h4>Year published/released:</h4>
+                    <div id="year-row-chart"></div>
+                </div>
             </div>
             <div class="flex-row">
                 <!-- row chart for mechanics -->
-                <div class="flex-column chart-box">
+                <div class="flex-column chart-box" data-step="11" data-intro="This chart tells you which are
+                the most common game mechanics - that is, what players physically do while playing - in the
+                current selection.">
                     <h4>Most common mechanics used:</h4>
                     <div id="mechanics-row-chart"></div>
-                    <button class="reset" onclick="clearMechanics()">Reset mechanics selection</button>
+                    <button class="reset" onclick="clearMechanics()" data-step="12" data-intro="This button
+                    provides a convenient way to clear all mechanics restrictions from the current selection.
+                    It is particularly useful if you have selected a mechanic which then disappears from the 10
+                    most common ones when you make further selections.">Reset mechanics selection</button>
                 </div>
                 <!-- row chart for categories -->
-                <div class="flex-column chart-box">
+                <div class="flex-column chart-box" data-step="13" data-intro='The following charts perform
+                the same functionality as the mechanics chart - complete with reset button - first for the
+                game "categories" as defined by BGG...'>
                     <h4>Most common game categories:</h4>
                     <div id="categories-row-chart"></div>
                     <button class="reset" onclick="clearCategories()">Reset categories selection</button>
                 </div>
                 <!-- row chart for designers -->
-                <div class="flex-column chart-box">
+                <div class="flex-column chart-box" data-step="14" data-intro="...then for game designers...">
                     <h4>Most common designers:</h4>
                     <div id="designers-row-chart"></div>
                     <button class="reset" onclick="clearDesigners()">Reset designers selection</button>
                 </div>
                 <!-- row chart for publishers -->
-                <div class="flex-column chart-box">
+                <div class="flex-column chart-box" data-step="15" data-intro="...and finally for publishers.">
                     <h4>Most common publishers:</h4>
                     <div id="publishers-row-chart"></div>
                     <button class="reset" onclick="clearPublishers()">Reset publishers selection</button>
@@ -80,15 +118,23 @@
         </div>
         <div class="flex-column" id="ratings">
             <!-- pie chart for average rating -->
-            <div class="flex-column chart-box" onclick="first()">
+            <div class="flex-column chart-box" onclick="first()" data-step="16" data-intro="This pie chart gives
+            a complete breakdown of the average rating for all games in the current selection, separated into
+            integer bands. If you want to, you can click on individual slices to only look at games in a
+            particular rating band.">
                 <h4>Breakdown of average ratings:</h4>
                 <div id="avg-rating-pie-chart"></div>
             </div>
-            <!-- data table of top-rated games among the selection -->
+            <!-- data table of games in the selection -->
             <h4>List of games in current selection:</h4>
             <p>(Click column headers to change ordering)</p>
-            <table id="table"></table>
-            <div id="paging">
+            <table id="table" data-step="17" data-intro="This table allows you to see exactly which games are
+            in the current selection. This is mainly provided in order to allow you to discover any games you
+            may be unfamiliar with which match particular criteria - the names are links to the boardgamegeek page
+            for that particular game. As the help-text above says, you can click on the column headers to reorder
+            the games by that criterion - and to toggle the ordering between descending and ascending."></table>
+            <div id="paging" data-step="18" data-intro="And dont forget these buttons to move through the table
+            one page at a time, or to skip straight to the first or last pages.">
                 Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>
                 <div>
                 <button id="first" onclick="first()" aria-label="first">
@@ -112,4 +158,5 @@
     <script src="{{ url_for ('static', filename='lib/js/dc.js')}}"></script>
     <script src="{{ url_for ('static', filename='lib/js/queue.js')}}"></script>
     <script src="{{ url_for ('static', filename='js/graph.js')}}"></script>
+    <script src="{{ url_for ('static', filename='lib/js/intro.js')}}"></script>
  {% endblock %}
