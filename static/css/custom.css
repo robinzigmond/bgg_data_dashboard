@@ -41,7 +41,7 @@ nav {
     float: right;
     list-style-type: none;
     padding: 0;
-    margin: auto 0;
+    margin: auto 2px auto 0;
 }
 
 .nav-link {
@@ -103,6 +103,10 @@ button[disabled] {
     align-items: center;
 }
 
+/* the flex-basis values below (and flex-shrink of 0) are needed to force these 2 columns to appear
+on separate lines on mobie Safari, where the screen is narrow than 800px. Otherwise Safari tries to
+display them side-by-side, and cuts off the left-hand portion of the charts.*/
+
 #main-charts {
     flex: 2 0 500px;
 }
@@ -111,15 +115,13 @@ button[disabled] {
     flex: 1 0 300px;
 }
 
+/* more adjustments to fix flex-wrap on safari */
 .flex-row .flex-column:before, .flex-row .flex-column:after {
     display: flex;
     flex-wrap: wrap;
 }
 
-#year-bar-chart {
-    overflow: auto;
-}
-
+/* need to shrink this text to stop it overlapping with that for the neighbouring bar */
 #year-bar-chart .axis text {
     font-size: 8px;
     color: #fff;
@@ -145,6 +147,7 @@ button[disabled] {
     font-weight: bold;
 }
 
+/* make table column headings behave like links - to make clearer to the user that they are clickable */
 .ordering {
     text-decoration: underline;
     cursor: pointer;
@@ -158,6 +161,7 @@ button[disabled] {
     text-align: center;
 }
 
+/* complicated selector used to hide the text for rows with no entries */
 g.row rect[width="0"]+text {
     display: none;
 }
@@ -177,11 +181,14 @@ g.row rect[width="0"]+text {
         display: none;
     }
 
+    /* make sure the select menus line up nicely when they are wrapped on small screens */
     #select {
         justify-content: flex-start;        
     }
 }
 
+/* shrink navbar text on very small screens, in order to stop the text extending to 2 lines
+(if it does is messes up the display) */
 @media (max-width: 500px) {
     #nav-title {
         font-size: 16px;

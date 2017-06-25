@@ -1,8 +1,8 @@
 queue()
     .defer(d3.json, "/BGG/game_info")
-    .await(makeGraphs);
+    .await(renderDashboard);
 
-function makeGraphs(error, game_infoJson) {
+function renderDashboard(error, game_infoJson) {
 
     var game_data = game_infoJson;
 
