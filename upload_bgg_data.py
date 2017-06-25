@@ -128,9 +128,17 @@ def update_game_database(game_data):
             collection.insert_many(data_dict)
             print "successfully uploaded to MongoDB!"
         # if we have succesffully reached this point with no errors, it is safe to
-        # replace the old "permanent" data with the new
-        collection.rename(COLLECTION_NAME, dropTarget=True)
-
+        # replace the old "permanent" data with the new.
+        # Errors may occur due to a user accessing the old data at the exact moment
+        # we want to drop it, so we keep trying until we achieve success:
+        success = False
+        while not success:
+            try:
+                collection.rename(COLLECTION_NAME, dropTarget=True)
+                success = True
+            except Exception as e:
+                print e
+                continue
 
 # the main program just uses the function defined above to first get the
 # game ID lists, uses those to get the data from the BGG API, and finally

@@ -1,0 +1,1 @@
+web: gunicorn bgg_dashboard:app

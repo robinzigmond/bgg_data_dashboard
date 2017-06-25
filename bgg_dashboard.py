@@ -58,4 +58,4 @@ def game_data():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")  # MUST remember to set debug to False when deploying!!
+    app.run()

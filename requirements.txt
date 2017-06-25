@@ -1,0 +1,17 @@
+appdirs==1.4.3
+beautifulsoup4==4.6.0
+boardgamegeek2==0.0.1
+click==6.7
+Flask==0.12.2
+gunicorn==19.7.1
+itsdangerous==0.24
+Jinja2==2.9.6
+lxml==3.7.3
+MarkupSafe==1.0
+packaging==16.8
+pymongo==3.4.0
+pyparsing==2.2.0
+requests==2.14.2
+requests-cache==0.4.13
+six==1.10.0
+Werkzeug==0.12.2
