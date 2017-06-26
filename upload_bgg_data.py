@@ -1,12 +1,17 @@
 import time
+import os
 from urllib2 import urlopen
 import boardgamegeek
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
-MONGODB_HOST = "localhost"
-MONGODB_PORT = 27017
-DBS_NAME = "BGG"
+# the following setup will work on the heroku server.
+# I can also update the heroku database manually by runing the script
+# from my PC - providing I copy the right values for MONGO_URI and
+# DBS_NAME. But for obvious reasons I'm not publishing those
+# values on Github!
+MONGO_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
+DBS_NAME = os.getenv('MONGO_DB_NAME', 'BGG')
 COLLECTION_NAME = "game_info"
 TEMP_COLLECTION_NAME = "temp"
 
@@ -115,7 +120,7 @@ def update_game_database(game_data):
     if the new data is "good". (Failures can mostly be caused by issues with the BGG API.)
     """
     # create connection:
-    with MongoClient(host=MONGODB_HOST, port=MONGODB_PORT) as client:
+    with MongoClient(MONGO_URI) as client:
         db = client[DBS_NAME]
         collection = db[TEMP_COLLECTION_NAME]
         # first wipe any previous termporary data - this is now not needed
