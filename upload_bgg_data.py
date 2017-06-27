@@ -149,7 +149,7 @@ def main_process():
  
     bgg = boardgamegeek.BGGClient(requests_per_minute=10)
     lists = []
-    for i in range(0, PAGES):
+    for i in range(0, 100):
         lists.append(get_game_ids("numvoters", i+1, 1))
     data = get_api_data(bgg, lists)
     update_game_database(data)
