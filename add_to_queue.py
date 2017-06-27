@@ -9,4 +9,5 @@ from worker import conn
 from upload_bgg_data import main_process
 
 q = Queue(connection=conn)
-result = q.enqueue(main_process)
+result = q.enqueue(main_process, timeout=7200)  # increase timeout period to 2 hours to ensure it will finish
+# unless major problems are encountered. (The default value is just 3 minutes!)
