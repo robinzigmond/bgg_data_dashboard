@@ -9,4 +9,4 @@ from worker import conn
 from upload_bgg_data import main_process
 
 q = Queue(connection=conn)
-result = q.enqueu(main_process, "http://heroku.com")
+result = q.enqueue(main_process, "http://heroku.com")
