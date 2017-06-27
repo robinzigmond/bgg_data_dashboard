@@ -86,7 +86,7 @@ def get_api_data(bgg_client, id_lists):
     for id_list in id_lists:
         time.sleep(10) # pause to prevent API throttling
         counter = counter+1
-        print "trying to obtain API data for page %s of %s" % (counter, PAGES)
+        print "trying to obtain API data for page %s of 100" % counter
         # The following API call returns a list of objects representing the games:
         games = bgg_client.game_list(game_id_list=id_list)
         # map over the list to get a list of dictionaries of the desired data:
@@ -115,7 +115,7 @@ def update_game_database(game_data):
         counter = 0
         for data_dict in game_data:
             counter = counter+1
-            print "trying to upload API data for page %s of %s" % (counter, PAGES)
+            print "trying to upload API data for page %s of 100" % counter
             # upload new data
             collection.insert_many(data_dict)
             print "successfully uploaded to MongoDB!"
