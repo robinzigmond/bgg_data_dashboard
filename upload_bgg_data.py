@@ -106,6 +106,15 @@ def update_game_database(game_data):
     It first uploads them to a new collection, and only wipes the old one and replaces it
     if the new data is "good". (Failures can mostly be caused by issues with the BGG API.)
     """
+    # the following setup will work on the heroku server.
+    # I can also update the heroku database manually by runing the script
+    # from my PC - providing I copy the right values for MONGO_URI and
+    # DBS_NAME. But for obvious reasons I'm not publishing those
+    # values on Github!
+    MONGO_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
+    DBS_NAME = os.getenv('MONGO_DB_NAME', 'BGG')
+    COLLECTION_NAME = "game_info"
+    TEMP_COLLECTION_NAME = "temp"
     # create connection:
     with MongoClient(MONGO_URI) as client:
         db = client[DBS_NAME]
@@ -138,18 +147,6 @@ def main_process():
     game ID lists, uses those to get the data from the BGG API, and finally
     uploads the data to MongoDB"""
  
-    # the following setup will work on the heroku server.
-    # I can also update the heroku database manually by runing the script
-    # from my PC - providing I copy the right values for MONGO_URI and
-    # DBS_NAME. But for obvious reasons I'm not publishing those
-    # values on Github!
-    MONGO_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
-    DBS_NAME = os.getenv('MONGO_DB_NAME', 'BGG')
-    COLLECTION_NAME = "game_info"
-    TEMP_COLLECTION_NAME = "temp"
-
-    PAGES = 100  # constant for the number of pages of search results to look
-                 # through. Each page consists of 100 items.
     bgg = boardgamegeek.BGGClient(requests_per_minute=10)
     lists = []
     for i in range(0, PAGES):
