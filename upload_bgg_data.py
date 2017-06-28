@@ -89,14 +89,21 @@ def get_api_data(bgg_client, id_lists):
         print "trying to obtain API data for page %s of 100" % counter
         # The following API call returns a list of objects representing the games:
         games = bgg_client.game_list(game_id_list=id_list)
-        # map over the list to get a list of dictionaries of the desired data:
-        data_dicts = map(get_good_data, games)
-        game_data.append(data_dicts)
-        if game_data == {}:
+        # check if the API call succesfully gave a non-empty list.
+        # (It gives an empty list in cases of throttling or other API
+        # errors - which then cause an error to be thrown when uploading
+        # to Mongo.)
+        # Note that at present, nothing happens in the event of failure
+        # - only that a message is printed to enable easier tracking
+        # down of where the error occurred, or to give an early warning
+        # of failure if I happen to be watching the logs in real time.
+        if games == []:
             print "failure"
         else:
             print "success!"
-        
+        # map over the list to get a list of dictionaries of the desired data:
+        data_dicts = map(get_good_data, games)
+        game_data.append(data_dicts)
     return game_data
 
 
@@ -106,11 +113,10 @@ def update_game_database(game_data):
     It first uploads them to a new collection, and only wipes the old one and replaces it
     if the new data is "good". (Failures can mostly be caused by issues with the BGG API.)
     """
-    # the following setup will work on the heroku server.
+    # the following setup is for the heroku server.
     # I can also update the heroku database manually by runing the script
-    # from my PC - providing I copy the right values for MONGO_URI and
-    # DBS_NAME. But for obvious reasons I'm not publishing those
-    # values on Github!
+    # from my PC - providing I give the right values for MONGO_URI and
+    # DBS_NAME. (Not listed here, for obvious reasons.)
     MONGO_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
     DBS_NAME = os.getenv('MONGO_DB_NAME', 'BGG')
     COLLECTION_NAME = "game_info"
@@ -143,8 +149,8 @@ def update_game_database(game_data):
 
 
 def main_process():
-    """ the main program just uses the function defined above to first get the
-    game ID lists, uses those to get the data from the BGG API, and finally
+    """ the main program just uses the functions defined above to first
+    get the game ID lists, uses those to get the data from the BGG API, and finally
     uploads the data to MongoDB"""
  
     bgg = boardgamegeek.BGGClient(requests_per_minute=10)
