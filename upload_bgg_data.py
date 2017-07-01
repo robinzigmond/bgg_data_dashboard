@@ -84,23 +84,28 @@ def get_api_data(bgg_client, id_lists):
     game_data = []
     counter = 0
     for id_list in id_lists:
-        time.sleep(10) # pause to prevent API throttling
-        counter = counter+1
-        print "trying to obtain API data for page %s of 100" % counter
-        # The following API call returns a list of objects representing the games:
-        games = bgg_client.game_list(game_id_list=id_list)
-        # check if the API call succesfully gave a non-empty list.
-        # (It gives an empty list in cases of throttling or other API
-        # errors - which then cause an error to be thrown when uploading
-        # to Mongo.)
-        # Note that at present, nothing happens in the event of failure
-        # - only that a message is printed to enable easier tracking
-        # down of where the error occurred, or to give an early warning
-        # of failure if I happen to be watching the logs in real time.
-        if games == []:
-            print "failure"
-        else:
-            print "success!"
+        success = False
+        # loop to keep trying each API call (for this set of 100 games)
+        # a usable result is obtained
+        while not success:
+            time.sleep(10) # pause to prevent API throttling
+            counter = counter+1
+            print "trying to obtain API data for page %s of 100" % counter
+            # The following API call returns a list of objects representing the games:
+            games = bgg_client.game_list(game_id_list=id_list)
+            # check if the API call succesfully gave a non-empty list.
+            # (It gives an empty list in cases of throttling or other API
+            # errors - which then cause an error to be thrown when uploading
+            # to Mongo.)
+            if games == []:
+                # in case of an API error causing lack of output,
+                # wait for a further 10 seconds (making 20 in all)
+                # and try again
+                print "failure - retrying..."
+                time.sleep(10)
+            else:
+                print "success!"
+                success = True
         # map over the list to get a list of dictionaries of the desired data:
         data_dicts = map(get_good_data, games)
         game_data.append(data_dicts)
