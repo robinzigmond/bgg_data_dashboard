@@ -85,11 +85,11 @@ def get_api_data(bgg_client, id_lists):
     counter = 0
     for id_list in id_lists:
         success = False
+        additional_delay = 10
         # loop to keep trying each API call (for this set of 100 games)
         # a usable result is obtained
         while not success:
             time.sleep(10) # pause to prevent API throttling
-            counter = counter+1
             print "trying to obtain API data for page %s of 100" % counter
             # The following API call returns a list of objects representing the games:
             games = bgg_client.game_list(game_id_list=id_list)
@@ -102,10 +102,16 @@ def get_api_data(bgg_client, id_lists):
                 # wait for a further 10 seconds (making 20 in all)
                 # and try again
                 print "failure - retrying..."
-                time.sleep(10)
+                time.sleep(additional_delay)
+                additional_delay += 10
+                # keep waiting longer with each failure, to allow a result to
+                # eventually be obtained
             else:
                 print "success!"
                 success = True
+                counter = counter+1
+                # reset delay counter if successful
+                additional_delay = 10
         # map over the list to get a list of dictionaries of the desired data:
         data_dicts = map(get_good_data, games)
         game_data.append(data_dicts)
