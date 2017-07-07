@@ -17,7 +17,7 @@ The data is stored in a [MongoDB](https://www.mongodb.com) collection.
 The Python libraries used are listed in the requirements.txt file. Other than Flask and its dependencies, and [pymongo](https://api.mongodb.com/python/current/) for the database handling, I have used the following 3rd-party libraries:
 - The [boardgamegeek2 module](http://lcosmin.github.io/boardgamegeek) is used to access the BGG API.
 - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) is used in conjunction with the lxml HTML parser to gather some information from the main BGG site in order to select the right games to query the API about.
-- [gunicorn](gunicorn.org) is necessary for deployment to Heroku, and [python-rq](gunicorn.org/) (together with its dependencies) is necessary to create the job queue which allows the data-updating script to run when scheduled.
+- [gunicorn](http://gunicorn.org) is necessary for deployment to Heroku, and [python-rq](http://python-rq.org/) (together with its dependencies) is necessary to create the job queue which allows the data-updating script to run when scheduled.
 
 ### Front End
 The following Javascript and CSS libraries have been used for this project:
@@ -25,7 +25,7 @@ The following Javascript and CSS libraries have been used for this project:
 - [d3.js](https://github.com/d3/d3-3.x-api-reference) is used by dc.js in order to actually draw the charts. Version 3.5.3 has been used here - note that dc.js has still not been updated to work with v4 of d3.js. I have made no direct use of d3, since most of that is handled internally by dc, although very occasionally a d3 method or object has to be specified to pass to one of dc's methods.
 - [crossfilter.js](https://github.com/crossfilter/crossfilter/releases) is also used internally by dc.js in order to quickly "slice up" the data according to whatever properties are specified, and to put on and remove filters in response to the user's actions. Unlike with d3, a reasonable knowledge of crossfilter is required when using dc.js, to know how to specify "dimensions" and "groups" to get the charts drawn correctly. Note that I have used crossfilter v1.4.0 - this is the first version of crossfilter to support dimensions whose values are arrays. This feature was absolutely necessary for my row charts for mechanics, categories, designers and publishers.
 - dc.css is the companion css file for dc.js, and is required in order for the charts to display correctly
-- [intro.js](http://introjs.com/) was used to construct the dashboard tutorial (seen by clicing the "show me how this works!" button at the top of the screen). introjs.css is required in addition, and I also included introjs-nazanin.css as my choice of intro theme [from the options available](http://introjs.com/docs/themes/list).
+- [intro.js](http://introjs.com/) was used to construct the dashboard tutorial (seen by clicing the "show me how this works!" button at the top of the screen). introjs.css is required in addition, and I also included introjs-dark.css as my choice of intro theme [from the options available](http://introjs.com/docs/themes/list).
 - Finally, I have used icons from [Font Awesome](http://fontawesome.io/) on the table pagination buttons - and of course a couple of fonts from [Google Fonts](https://fonts.google.com/) .
 
 ## Notes on my own code
