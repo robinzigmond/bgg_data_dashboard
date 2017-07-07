@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    <div id="loader">
+        <p>Please be patient while all the game data is loaded. This should only take a few seconds...</p>
+        <div id="spinner"></div>
+    </div>
+
     <button data-step="1" data-intro="This is a dashboard for exploring data on tabletop games,
     gathered from the boardgamegeek website. There are many options to explore: please play around and
     have fun!" class="intro_button" type="button" autofocus onclick="introJs().start();">

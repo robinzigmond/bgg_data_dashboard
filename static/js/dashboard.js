@@ -658,6 +658,7 @@ function renderDashboard(error, game_infoJson) {
     update();
     dc.renderAll();
     makeTableHeaders();
+    d3.select("#loader").classed("hidden", true);
 
     /* the following code ensures that the row chart and bar chart for the Year Published information - the
     two versions of the same chart, only one of which is ever displayed depending on screen size - always stay
