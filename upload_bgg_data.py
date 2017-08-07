@@ -103,7 +103,7 @@ def get_api_data(bgg_client, id_lists):
                 # and try again
                 print "failure - retrying..."
                 time.sleep(additional_delay)
-                additional_delay += 10
+                additional_delay *= 2
                 # keep waiting longer with each failure, to allow a result to
                 # eventually be obtained
             else:
