@@ -82,7 +82,7 @@ def get_api_data(bgg_client, id_lists):
     one game.
     """
     game_data = []
-    counter = 0
+    counter = 1
     for id_list in id_lists:
         success = False
         additional_delay = 10

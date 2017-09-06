@@ -129,7 +129,7 @@ function renderDashboard(error, game_infoJson) {
         .valueAccessor(function(d) {
             return d;
         })
-        .formatNumber(d3.format(",d"));
+        .formatNumber(d3.format(",.0f"));
 
     /**
      * average rating display
