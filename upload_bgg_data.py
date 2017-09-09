@@ -100,10 +100,10 @@ def get_api_data(bgg_client, id_lists):
             if games == []:
                 # in case of an API error causing lack of output,
                 # wait for a further 10 seconds (making 20 in all)
-                # and try again
+                # and try again - expontentially increasing timeout each time
                 print "failure - retrying..."
                 time.sleep(additional_delay)
-                additional_delay *= 2
+                additional_delay *= 3
                 # keep waiting longer with each failure, to allow a result to
                 # eventually be obtained
             else:
