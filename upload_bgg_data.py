@@ -98,23 +98,33 @@ def get_api_data(bgg_client, id_lists):
             # errors - which then cause an error to be thrown when uploading
             # to Mongo.)
             if games == []:
-                # in case of an API error causing lack of output,
-                # wait for a further 10 seconds (making 20 in all)
-                # and try again - expontentially increasing timeout each time
-                print "failure - retrying..."
-                time.sleep(additional_delay)
-                additional_delay *= 3
-                # keep waiting longer with each failure, to allow a result to
-                # eventually be obtained
+                if id_list:
+                    # in case of an API error causing lack of output,
+                    # wait for a further 10 minutes and try again - 
+                    # increasing timeout by 10 minutes each time
+                    print "failure - retrying..."
+                    time.sleep(additional_delay)
+                    additional_delay += 600
+                    # keep waiting longer with each failure, to allow a result to
+                    # eventually be obtained
+                else:
+                    # it is possible (at least theoretically) that there
+                    # is no data because no "genuine" games were obtained
+                    # from a particular page. In this case we simply skip
+                    # this page
+                    data_dicts = []
+                    success = True
             else:
                 print "success!"
                 success = True
                 counter = counter+1
                 # reset delay counter if successful
                 additional_delay = 10
-        # map over the list to get a list of dictionaries of the desired data:
-        data_dicts = map(get_good_data, games)
-        game_data.append(data_dicts)
+        # map over the list to get a list of dictionaries of the desired data
+        # - but skip if there was genuinely no data (to avoid MongoDB error):
+        if data_dicts:
+            data_dicts = map(get_good_data, games)
+            game_data.append(data_dicts)
     return game_data
 
 
