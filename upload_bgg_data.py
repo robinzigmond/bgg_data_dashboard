@@ -86,6 +86,7 @@ def get_api_data(bgg_client, id_lists):
     for id_list in id_lists:
         success = False
         additional_delay = 10
+        data_available = False
         # loop to keep trying each API call (for this set of 100 games)
         # a usable result is obtained
         while not success:
@@ -112,17 +113,17 @@ def get_api_data(bgg_client, id_lists):
                     # is no data because no "genuine" games were obtained
                     # from a particular page. In this case we simply skip
                     # this page
-                    data_dicts = []
                     success = True
             else:
                 print "success!"
                 success = True
+                data_available = True
                 counter = counter+1
                 # reset delay counter if successful
                 additional_delay = 10
         # map over the list to get a list of dictionaries of the desired data
         # - but skip if there was genuinely no data (to avoid MongoDB error):
-        if data_dicts:
+        if data_available:
             data_dicts = map(get_good_data, games)
             game_data.append(data_dicts)
     return game_data
