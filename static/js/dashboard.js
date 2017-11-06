@@ -101,7 +101,7 @@ function renderDashboard(error, game_infoJson) {
      */
 
     // array variable for the options I want displayed
-    var possibleMins = [100, 200, 500, 1000, 2000, 5000, 10000];
+    var possibleMins = [200, 500, 1000, 2000, 5000, 10000];
 
     var minRatingsDim = games.dimension(function(d) {
         return possibleMins.filter(function(lowerBound) {
