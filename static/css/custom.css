@@ -204,6 +204,11 @@ g.row rect[width="0"]+text {
     display: none;
 }
 
+/* make introjs text show up! */
+.introjs-tooltiptext {
+    color: black;
+}
+
 /* change the displayed chart for small-screen devices */
 @media (max-width: 800px) {
     .small-screen {
