@@ -92,7 +92,7 @@ def get_api_data(bgg_client, id_lists):
     counter = 1
     for id_list in id_lists:
         success = False
-        additional_delay = 10
+        additional_delay = 0
         data_available = False
         # loop to keep trying each API call (for this set of 100 games)
         # a usable result is obtained
@@ -109,6 +109,7 @@ def get_api_data(bgg_client, id_lists):
                     call_success = True
                 except boardgamegeek.exceptions.BGGApiError as e:
                     print "error: %s - retrying" %e
+                    time.sleep(60)
             # check if the API call succesfully gave a non-empty list.
             # (It gives an empty list in cases of throttling or other API
             # errors - which then cause an error to be thrown when uploading
@@ -116,11 +117,12 @@ def get_api_data(bgg_client, id_lists):
             if games == []:
                 if id_list:
                     # in case of an API error causing lack of output,
-                    # wait for a further 10 minutes and try again - 
-                    # increasing timeout by 10 minutes each time
+                    # wait for a further 30 minutes and try again - 
+                    # increasing timeout by 30 minutes each time
+                    # (from experience, half hour delay should be enough to get it working)
                     print "failure - retrying..."
                     time.sleep(additional_delay)
-                    additional_delay += 600
+                    additional_delay += 1800
                     # keep waiting longer with each failure, to allow a result to
                     # eventually be obtained
                 else:
