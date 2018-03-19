@@ -1,6 +1,6 @@
 import time
 import os
-from urllib2 import urlopen
+from urllib2 import urlopen, HTTPError
 import boardgamegeek
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
@@ -22,11 +22,18 @@ def get_game_ids(sortcriterion, firstpage, pages, sortdirection="desc"):
     BASEURL = "https://boardgamegeek.com/browse/boardgame"
     game_ids = []
     for pageno in range(firstpage, firstpage+pages):
-        # time.sleep(10)
         print "processing page no. %s" % pageno
         search_url = (BASEURL + "/page/" + str(pageno) + "?sort="
                       + sortcriterion + "&sortdir=" + sortdirection)
-        html = urlopen(search_url).read()
+        # catch HTTPErrors (usually gateway timeout) and repeat until the call works
+        success = False
+        while not success:
+            try:
+                html = urlopen(search_url).read()
+                success = True
+            except HTTPError as e:
+                print "HTTPError: %s - retrying" %e
+                time.sleep(10)
         soup = BeautifulSoup(html, "lxml")
         # now search for all boardgame links in ranking list
         link_tags = soup.findAll(is_link_in_ranking_list)
@@ -92,8 +99,16 @@ def get_api_data(bgg_client, id_lists):
         while not success:
             time.sleep(10) # pause to prevent API throttling
             print "trying to obtain API data for page %s of 100" % counter
-            # The following API call returns a list of objects representing the games:
-            games = bgg_client.game_list(game_id_list=id_list)
+            # The following API call returns a list of objects representing the games.
+            # it may fail cause a BGGApiError (typically "non-XML response"), for
+            # seemingly random reasons. We try to catch these and retry the call.
+            call_success = False
+            while not call_success:
+                try:
+                    games = bgg_client.game_list(game_id_list=id_list)
+                    call_success = True
+                except boardgamegeek.exceptions.BGGApiError as e:
+                    print "error: %s - retrying" %e
             # check if the API call succesfully gave a non-empty list.
             # (It gives an empty list in cases of throttling or other API
             # errors - which then cause an error to be thrown when uploading
